@@ -1,21 +1,19 @@
-const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
-
 // 引入資料庫連線
-const connectionPromise = require('../Models/mysql').connectionPromise;
-
+const connectionPromise = require('../utils/mysql').connectionPromise;
 
 module.exports = {
   tasksDetail: async (postId) => {
     const connection = await connectionPromise;
     try {
-      if (!postId) return error_message.input(res);
-      const Query = `SELECT t.*, u.name, u.nickname, u.picture 
+      
+      const query = `SELECT t.*, u.name, u.nickname, u.picture 
       FROM tasks t
       LEFT JOIN users u ON t.poster_id = u.id
-      WHERE t.poster_id = ?
+      WHERE t.id = ?
       `;
-      const [results] = await connection.execute(Query, [postId]);
-      if (results.length == 0) return error_message.taskNotExist(res);
+
+      const [result] = await connection.execute(query, [postId]);
+      if (result.length == 0) return error_message.taskNotExist(res);
       const response = {
         data: {
           task: {
@@ -37,7 +35,7 @@ module.exports = {
           }
         }
       };
-      return res.status(200).json(response);
+      return response;
     }catch (error) {
       error_message.query(res);
     } finally {
