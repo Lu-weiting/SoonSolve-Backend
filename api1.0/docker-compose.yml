@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
 
-  redis:
-    # image: redis:6.0.16
-    # container_name: redis
-    # restart: always
-    # networks:
-    #   - ss_network
+  # redis:
+  #   # image: redis:6.0.16
+  #   # container_name: redis
+  #   # restart: always
+  #   # networks:
+  #   #   - ss_network
 
   nginx:
     image: nginx:1.18.0
