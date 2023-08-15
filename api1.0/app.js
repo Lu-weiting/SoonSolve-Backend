@@ -1,5 +1,5 @@
 const express = require('express');
-const connectionPromise = require('./utils/mysql').connectionPromise;
+const connectionPromise = require('./utils/database').connectionPromise;
 const tasksRouter = require('./router/tasksRouter');
 const port = 3000;
 

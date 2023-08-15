@@ -1,6 +1,6 @@
 // 引入資料庫連線
 const tasksModel = require('../Models/tasksModel');
-const error = require('../utils/error');
+const errorMsg = require('../utils/error');
 
 module.exports = {
   getDetail: async (req, res) => {
@@ -10,9 +10,9 @@ module.exports = {
 
       const response = await tasksModel.tasksDetail(taskId);
       return res.status(200).json(response);
-    } catch (errorMsg) {
-      console.error(errorMsg);
-      error.dbConnection(res);
+    } catch (error) {
+      console.error(error);
+      errorMsg.dbConnection(res);
     }
   }
 }

@@ -1,5 +1,6 @@
 // 引入資料庫連線
-const connectionPromise = require('../utils/mysql').connectionPromise;
+const connectionPromise = require('../utils/database').connectionPromise;
+const errorMsg = require('../utils/error');
 
 module.exports = {
   tasksDetail: async (postId) => {
@@ -12,8 +13,8 @@ module.exports = {
       WHERE t.id = ?
       `;
 
-      const [result] = await connection.execute(query, [postId]);
-      if (result.length == 0) return error_message.taskNotExist(res);
+      const result = await connection.execute(query, [postId]);
+      if (result.length == 0) return errorMsg.taskNotExist(res);
       const response = {
         data: {
           task: {
@@ -37,7 +38,7 @@ module.exports = {
       };
       return response;
     }catch (error) {
-      error_message.query(res);
+      errorMsg.query(res);
     } finally {
       console.log('connection release');
       connection.release();

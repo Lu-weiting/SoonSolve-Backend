@@ -1,6 +1,6 @@
 // 引入資料庫連線
-const connectionPromise = require('../utils/mysql').connectionPromise;
-
+const connectionPromise = require('../utils/database').connectionPromise;
+const errorMsg = require('../utils/error');
 module.exports = {
   tasksRecord: async (my_id, type) => {
     const connection = await connectionPromise;
@@ -62,7 +62,7 @@ module.exports = {
       };
       return res.status(200).json(response);
     }catch (error) {
-      error_message.query(res);
+      errorMsg.query(res);
     } finally {
       console.log('connection release');
       connection.release();
