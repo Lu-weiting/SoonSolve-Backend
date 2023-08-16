@@ -7,7 +7,6 @@ dotenv.config()
 // Generate JWT token
 exports.generateJWTToken= (userId) => {
     const secretKey = process.env.SECRET; // Replace with your secret key
-    console.log(secretKey);
     const payload = { id: userId };
     //console.log(payload);
     const token = jwt.sign(payload, secretKey, { expiresIn: '8h' }); // Expires in 8 hour

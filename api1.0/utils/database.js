@@ -11,10 +11,6 @@ const connectionPromise =  mysql.createPool({
     database: process.env.DATABASE
 });
 
-console.log(process.env.HOST);
-console.log(process.env.PASSWORD);
-console.log(process.env.DB_USER);
-
 module.exports = {
     connectionPromise
 };
