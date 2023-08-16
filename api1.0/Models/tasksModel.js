@@ -7,6 +7,26 @@ moment.tz.setDefault("Asia/Taipei");
 
 
 module.exports = {
+    createTask: async (res, userId, context) => {
+        const connection = await connectionPromise;
+        try {
+            const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            const result = await connection.execute(query, [context.title, context.content, context.deadline, , context.task_vacancy, context.location, context.reward, "pending", userId]) ;
+            const response = {
+                data: {
+                    task: {
+                        id: result.insertId
+                    }
+                }
+            };
+            return response;
+        } catch (error) {
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+            connection.release();
+        }
+    },
     homeSearch: async (res, cursor, location, friend, title, sex, userId) => {
         // undo db set
         // const connection = await user.poolConnection();
