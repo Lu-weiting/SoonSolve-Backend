@@ -13,4 +13,3 @@ router.post('/signin', usersController.signIn);
 router.get('/:type/task_records', auth.verifyToken, usersController.getRecords);
 router.get('/:id/profile', auth.verifyToken, usersController.getProfile);
 module.exports = router;
-// 1233
