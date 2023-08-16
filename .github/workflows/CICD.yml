@@ -1,0 +1,48 @@
+name: ss workflow
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  # test_ss:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Check code
+  #     uses: actions/checkout@v3
+  #   - name: Build docker compose for test
+  #     run: |
+  #       cd SoonSolve-Backend/api1.0
+  #       echo "${{ secrets.ENV }}" > .env
+  #       mkdir private
+  #       echo "${{ secrets.PRIVATE_KEY }}" > private/private.key
+  #       echo "${{ secrets.CERTIFICATE }}" > private/certificate.crt
+  #       docker-compose up -d
+  #   - name: Wait for containers to start
+  #     run: sleep 20
+  #   - name: Run unit test
+  #     run: docker exec canchu_container npm test -- --watch=false
+
+  deploy_canchu:
+    # needs: test_ss
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to ec2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_KEY }}
+        script: |
+          cd SoonSolve-Backend/api1.0
+          git pull origin develop
+          if [ ! -d "private" ]; then
+            mkdir private
+          fi
+          
+          echo "${{ secrets.ENV }}" > .env
+          echo "${{ secrets.PRIVATE_KEY }}" > private/private.key
+          echo "${{ secrets.CERTIFICATE }}" > private/certificate.crt
+          docker-compose down
+          docker-compose up --build -d
+          docker image prune -af
