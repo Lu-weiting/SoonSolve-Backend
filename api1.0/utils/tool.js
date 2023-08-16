@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js');
+
 require('dotenv').config();
 
 module.exports = {
@@ -6,7 +7,7 @@ module.exports = {
     encryptCursor: async (cursor) => {
         const encrypted = CryptoJS.AES.encrypt(cursor.toString(), process.env.secret).toString();
         return encrypted;
-      },
+    },
     decryptCursor: async (encryptedCursor) => {
       const decryptedBytes = CryptoJS.AES.decrypt(encryptedCursor, process.env.secret);
       const decryptedCursor = decryptedBytes.toString(CryptoJS.enc.Utf8);
@@ -24,5 +25,16 @@ module.exports = {
         return false;
       }
       return true;
+    },
+    uploadPicture: () => {
+      const storage = multer.diskStorage({
+        // /home/ubuntu/my-member-system/students/wei-ting/Canchu/static/
+        destination: '/soonsolve/static',
+        filename: (req, file, cb) => {
+          cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+        }
+      });
+      const upload = multer({ storage: storage });
+      return upload;
     }
 }

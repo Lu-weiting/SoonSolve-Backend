@@ -31,5 +31,14 @@ module.exports = {
     },
     userNotFound: (res) =>{
         res.status(400).json({ error: 'user not found' });
+    },
+    contentType: (res) => {
+        res.status(400).json({ error: 'Content type is not correct' });
+    },
+    query: (res) => {
+        res.status(500).json({ error: 'Server error - query failed' });
+    },
+    dbConnection: (res) => {
+        res.status(500).json({ error: 'Server error - connecting to db failed' });
     }
 }

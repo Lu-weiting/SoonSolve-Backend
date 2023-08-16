@@ -22,6 +22,8 @@ services:
       - ./private/private.key:/etc/ssl/private.key  # 替換為 SSL 私鑰的路徑
     networks:
       - ss_network  
+volumes:
+  userImage:
 
 networks:
   ss_network:   

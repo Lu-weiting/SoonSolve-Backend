@@ -157,8 +157,8 @@ module.exports = {
         }
       }
       const comments = [];
-      for(var i =0;i<targetProfile.length;i++){
-        const comment ={
+      for (var i = 0; i < targetProfile.length; i++) {
+        const comment = {
           id: targetProfile[i].cid,
           content: targetProfile[i].content,
           created_at: moment.utc(targetProfile[i].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
@@ -183,5 +183,30 @@ module.exports = {
       console.log('connection release');
       connection.release();
     }
+  },
+  pictureUpdate: async (res, my_id, filename) => {
+    const connection = await connectionPromise;
+    try {
+      const baseUrl = 'https://52.64.240.159';
+      const pictureUrl = `${baseUrl}/static/${filename}`;
+      console.log(`${pictureUrl}!~~`);
+      await connection.execute('UPDATE users SET picture = ? WHERE id = ?', [pictureUrl, my_id]);
+      console.log('update~~');
+      const data = {
+        data:
+        {
+          picture: pictureUrl
+        }
+      }
+      return data;
+
+    } catch (error) {
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
   }
+
+
 }

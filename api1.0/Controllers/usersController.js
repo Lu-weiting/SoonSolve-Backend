@@ -71,5 +71,21 @@ module.exports = {
       console.error(error);
       errorMsg.dbConnection(res);
     }
-  }
+  },
+  pictureUpdate: async (req, res) => {
+    try {
+        if (!req.headers['content-type']) return errorMsg.inputEmpty(res);
+        if (!req.headers['content-type'].includes('multipart/form-data')) return errorMsg.contentType(res);
+        const my_id = req.decodedToken.id;
+        
+        // const { redisClient } = req;
+        console.log(req.file.filename);
+        console.log(__dirname);
+        const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
+        res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      errorMsg.dbConnection(res);
+    }
+}
 }
