@@ -22,7 +22,7 @@ module.exports = {
     const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
     // 執行註冊的 SQL 
-    const signupQuery = 'INSERT INTO users(name, email, password, picture, provider) VALUES(?,?,?,?)';
+    const signupQuery = 'INSERT INTO users(name, email, password, picture) VALUES(?,?,?,?)';
     const [results] = await connection.execute(signupQuery, [name, email, hashedPassword, null]);
 
     const id = results.insertId;
