@@ -6,14 +6,14 @@ dotenv.config()
 
 const connectionPromise =  mysql.createPool({
     host: process.env.HOST,
-    user: 'user',
+    user: process.env.DB_USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE
 });
 
 console.log(process.env.HOST);
 console.log(process.env.PASSWORD);
-console.log(process.env.USER);
+console.log(process.env.DB_USER);
 
 module.exports = {
     connectionPromise
