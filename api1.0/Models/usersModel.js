@@ -41,6 +41,7 @@ module.exports = {
     return response;
   },
   signIn: async (email, res) => {
+    const connection = await connectionPromise;
     // 查詢使用者是否存在
     const signinQuery = 'SELECT * FROM users WHERE email = ?';
     const [is_exist] = await connection.execute(signinQuery, [email]);
