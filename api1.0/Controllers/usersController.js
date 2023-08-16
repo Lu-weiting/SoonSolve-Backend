@@ -8,9 +8,7 @@ const errorMsg = require('../utils/error');
 module.exports = {
   signUp: async(req, res) => {
     const { name, email, password } = req.body;
-    
-    console.log('test');
-    
+
     // 檢查必填欄位是否都有輸入
     if (!name || !password || !email) {
       return errorMsg.inputEmpty(res);

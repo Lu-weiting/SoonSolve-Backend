@@ -11,6 +11,7 @@ moment.tz.setDefault("Asia/Taipei");
 module.exports = {
   signUp: async (name, email, password) => {
     const connection = await connectionPromise;
+    console.log('test');
     // 檢查是否已經有相同的 email 註冊過
     const userQuery = 'SELECT email FROM users WHERE email = ?';
     const [rows] = await connection.execute(userQuery, [email]);
