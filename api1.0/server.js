@@ -10,5 +10,8 @@ const tasksRouter = require('./Routers/tasksRouter');
 
 app.use('/api/1.0/users', usersRouter);
 app.use('/api/1.0/tasks', tasksRouter);
+app.get('/api/1.0/', (req, res) => {
+  res.status(200).send('connected')
+})
 
 module.exports = app
