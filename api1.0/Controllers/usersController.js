@@ -21,9 +21,7 @@ module.exports = {
       const targetId = req.params.id;
       if (!targetId) return errorMsg.inputEmpty(res);
       const result = await usersModel.getProfile(res, targetId, my_id);
-      res.status(200).json({
-        ...result
-      });
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
