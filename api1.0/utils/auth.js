@@ -15,6 +15,7 @@ exports.generateJWTToken= (userId) => {
 // Middleware for verifying JWT token
 exports.verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
+
   try {
     if (!token) {
       return errorMsg.noToken(res);
@@ -25,7 +26,7 @@ exports.verifyToken = (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    errorMsg.wrongToken(res);
+    return errorMsg.wrongToken(res);
   }
 };
 

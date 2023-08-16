@@ -1,5 +1,7 @@
 // 引入資料庫連線
 const connectionPromise = require('../utils/database').connectionPromise;
+const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
+const auth = require('../utils/auth')
 const errorMsg = require('../utils/error');
 
 //Set Timezone
@@ -7,6 +9,47 @@ const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
+  signUp: async (name, email, password) => {
+    const connection = await connectionPromise;
+    // 檢查是否已經有相同的 email 註冊過
+    const userQuery = 'SELECT email FROM users WHERE email = ?';
+    const [rows] = await connection.execute(userQuery, [email]);
+    if (rows.length != 0) {
+      return errorMsg.duplicateEmail(res);
+    }
+    // 使用 crypto 加密密碼
+    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+    // 執行註冊的 SQL 
+    const signupQuery = 'INSERT INTO users(name, email, password, picture, provider) VALUES(?,?,?,?)';
+    const [results] = await connection.execute(signupQuery, [name, email, hashedPassword, null]);
+
+    const id = results.insertId;
+
+    // 創建包含註冊資訊和 JWT 的回應
+    const response = {
+      'data': {
+        'access_token': auth.generateJWTToken(id),
+        "user": {
+          "id": id,
+          "name": name,
+          "email": email,
+          "picture": null
+        }
+      }
+    };
+    return response;
+  },
+  signIn: async (email) => {
+    // 查詢使用者是否存在
+    const signinQuery = 'SELECT * FROM users WHERE email = ?';
+    const [is_exist] = await connection.execute(signinQuery, [email]);
+    if (is_exist.length === 0) {
+      return errorMsg.noUser(res);
+    }
+    const user = is_exist[0];
+    return user;
+  },
   tasksRecord: async (res, my_id, type, cursor, limit) => {
     const connection = await connectionPromise;
     let decodeCuser = null;
@@ -94,6 +137,17 @@ module.exports = {
         console.error(error);
         throw new Error('Server error');
       }
+    }catch (error) {
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
+  },
+  getProfile: async(res,targetId,my_id)=>{
+    const connection = await connectionPromise;
+    try {
+      
     }catch (error) {
       errorMsg.query(res);
     } finally {
