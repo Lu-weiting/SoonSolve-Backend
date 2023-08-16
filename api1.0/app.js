@@ -1,6 +1,6 @@
 const express = require('express');
 const connectionPromise = require('./utils/database').connectionPromise;
-const tasksRouter = require('./router/tasksRouter');
+const tasksRouter = require('./Routers/tasksRouter');
 const port = 3000;
 
 const app = express();

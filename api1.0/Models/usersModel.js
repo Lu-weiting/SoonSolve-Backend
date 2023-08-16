@@ -146,7 +146,7 @@ module.exports = {
   getProfile: async (res, targetId, my_id) => {
     const connection = await connectionPromise;
     try {
-      const [targetProfile] = await connection.execute('SELECT * FROM users WHERE id = ?', [targetId]);
+      const [targetProfile] = await connection.execute('SELECT U.id AS uid,name,picture,credit FROM users AS U WHERE id = ?', [targetId]);
       if (targetProfile.length == 0) return errorMsg.userNotFound(res);
       const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, userId, userId, targetId]);
       let friendship = null;
@@ -156,7 +156,17 @@ module.exports = {
           status: findFriendshipResult[0].status
         }
       }
-      
+      const user = {
+        id: actualUserId,
+        name: targetProfile[0].name,
+        picture: targetProfile[0].picture,
+        friend_count: targetProfile[0].friend_count,
+        introduction: targetProfile[0].introduction,
+        tags: targetProfile[0].tags,
+        friendship: friendship
+      };
+
+
 
 
 

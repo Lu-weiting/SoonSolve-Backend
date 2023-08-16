@@ -8,9 +8,7 @@ module.exports = {
             // const {redisClient} = req;
             
             const result = await task.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,userId);
-            res.status(200).json({
-                ...result
-            });
+            res.status(200).json(result);
         }catch (error) {
             errorMsg.dbConnection(res);
         }
