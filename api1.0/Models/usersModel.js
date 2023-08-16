@@ -81,22 +81,19 @@ module.exports = {
         };
         return content;
       });
-      Promise.all(promises)
-        .then(tasksResult => {
-          const response = {
-            data: {
-              task: tasksResult,
-              next_cursor: nextCursor
-            }
-          };
-          return response;
-        })
-        .catch(error => {
-          console.error(error);
-          res.status(500).json({ error: 'Server error' });
-        });
-      
-      return res.status(200).json(response);
+      try {
+        const tasksResult = await Promise.all(promises);
+        const response = {
+          data: {
+            task: tasksResult,
+            next_cursor: nextCursor
+          }
+        };
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Server error');
+      }
     }catch (error) {
       errorMsg.query(res);
     } finally {
