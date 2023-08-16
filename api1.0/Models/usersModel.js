@@ -5,7 +5,7 @@ const auth = require('../utils/auth')
 const errorMsg = require('../utils/error');
 
 //Set Timezone
-const moment = require('moment-timezone'); 
+const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
@@ -56,22 +56,21 @@ module.exports = {
     let decodeCuser = null;
     let query;
     try {
-      if(cursor == null){
+      if (cursor == null) {
         decodeCuser = Math.pow(2, 64);
-      }else {
+      } else {
         decodeCuser = await tool.decryptCursor(cursor);
       }
-      
-      if(type == 'Released')
-      {
-        query  = `SELECT t.*, u.name, u.nickname, u.picture 
+
+      if (type == 'Released') {
+        query = `SELECT t.*, u.name, u.nickname, u.picture 
         FROM tasks t
         LEFT JOIN users u ON t.poster_id = u.id
         WHERE t.poster_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ?
         `;
-      }else if (type == 'Accepted'){
-        query  = `SELECT ut.status,
+      } else if (type == 'Accepted') {
+        query = `SELECT ut.status,
         t.id,
         t.poster_id,
         t.created_at,
@@ -96,9 +95,9 @@ module.exports = {
       const [results] = await connection.execute(query, [my_id, decodeCuser, limit]);
       if (results.length == 0) {
         return error_message.taskNotExist(res);
-      }else if(results.length < limit){
+      } else if (results.length < limit) {
         nextCursor = null;
-      }else{
+      } else {
         const lastPostId = results[results.length - 1].id;
         nextCursor = await tool.encryptCursor(lastPostId);
         nextCursor = encodeURIComponent(nextCursor);
@@ -138,22 +137,77 @@ module.exports = {
         console.error(error);
         throw new Error('Server error');
       }
-    }catch (error) {
+    } catch (error) {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
       connection.release();
     }
   },
-  getProfile: async(res,targetId,my_id)=>{
+  getProfile: async (res, targetId, my_id) => {
     const connection = await connectionPromise;
     try {
-      
-    }catch (error) {
+      const [targetProfile] = await connection.execute('SELECT U.id AS uid,U.name AS name,U.picture AS picture,U.credit AS credit,C.id AS cid,C.content AS content,DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, C.poster_id AS poster_id FROM users AS U INNER JOIN comments AS C ON C.user_id = U.id WHERE id = ?', [targetId]);
+      if (targetProfile.length == 0) return errorMsg.userNotFound(res);
+      const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
+      let friendship = null;
+      if (findFriendshipResult.length > 0) {
+        friendship = {
+          id: findFriendshipResult[0].id,
+          status: findFriendshipResult[0].status
+        }
+      }
+      const comments = [];
+      for (var i = 0; i < targetProfile.length; i++) {
+        const comment = {
+          id: targetProfile[i].cid,
+          content: targetProfile[i].content,
+          created_at: moment.utc(targetProfile[i].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+          poster_id: targetProfile[i].poster_id
+        }
+        comments.push(comment);
+      }
+      const data = {
+        user: {
+          id: targetProfile[0].uid,
+          name: targetProfile[0].name,
+          picture: targetProfile[0].picture,
+          credit: targetProfile[0].credit,
+          comment: comments,
+          friendship
+        }
+      };
+      return data;
+    } catch (error) {
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
+  },
+  pictureUpdate: async (res, my_id, filename) => {
+    const connection = await connectionPromise;
+    try {
+      const baseUrl = 'https://52.64.240.159';
+      const pictureUrl = `${baseUrl}/static/${filename}`;
+      console.log(`${pictureUrl}!~~`);
+      await connection.execute('UPDATE users SET picture = ? WHERE id = ?', [pictureUrl, my_id]);
+      console.log('update~~');
+      const data = {
+        data:
+        {
+          picture: pictureUrl
+        }
+      }
+      return data;
+
+    } catch (error) {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
       connection.release();
     }
   }
+
+
 }
