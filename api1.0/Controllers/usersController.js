@@ -4,6 +4,7 @@ const auth = require('../utils/auth')
 const tool = require('../utils/tool')
 const errorMsg = require('../utils/error');
 
+// 12231565
 module.exports = {
   signUp: async(req, res) => {
     const { name, email, password } = req.body;
