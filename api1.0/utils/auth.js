@@ -8,7 +8,7 @@ exports.generateJWTToken= (userId) => {
     const secretKey = process.env.SECRET; // Replace with your secret key
     const payload = { id: userId };
     //console.log(payload);
-    const token = jwt.sign(payload, secretKey, { expiresIn: '8h' }); // Expires in 8 hour
+    const token = jwt.sign(payload, 'secretKey', { expiresIn: '8h' }); // Expires in 8 hour
     return token;
 }
 
