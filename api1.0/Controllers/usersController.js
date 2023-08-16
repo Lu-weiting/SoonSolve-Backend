@@ -1,10 +1,7 @@
 const usersModel = require('../Models/usersModel');
-<<<<<<< HEAD
 const auth = require('../utils/auth')
 const tool = require('../utils/tool')
 const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
-=======
->>>>>>> 738b1c5b1460bbd33e804732b211c7c58cd5a614
 const errorMsg = require('../utils/error');
 
 

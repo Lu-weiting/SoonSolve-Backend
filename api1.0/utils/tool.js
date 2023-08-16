@@ -1,12 +1,7 @@
 const CryptoJS = require('crypto-js');
-<<<<<<< HEAD
 //import dotenv from 'dotenv'
 const dotenv = require('dotenv');
 dotenv.config()
-=======
-
-require('dotenv').config();
->>>>>>> 738b1c5b1460bbd33e804732b211c7c58cd5a614
 
 module.exports = {
 
