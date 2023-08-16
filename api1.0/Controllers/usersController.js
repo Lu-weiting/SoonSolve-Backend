@@ -18,7 +18,7 @@ module.exports = {
     if (!tool.checkEmailRegex(email)) {
       return errorMsg.wrongEmail(res);
     }
-    const response = await usersModel.signUp(name, email, password);
+    const response = await usersModel.signUp(name, email, password, res);
     return res.json(response);
   },
   signIn: async(req, res) => {
@@ -30,7 +30,7 @@ module.exports = {
       return errorMsg.inputEmpty(res);
     }
 
-    const user = await usersModel.signIn(email);
+    const user = await usersModel.signIn(email, res);
 
     // 驗證密碼是否正確
     const PASSWORD = user.password;

@@ -9,7 +9,7 @@ const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
-  signUp: async (name, email, password) => {
+  signUp: async (name, email, password, res) => {
     const connection = await connectionPromise;
     console.log('test');
     // 檢查是否已經有相同的 email 註冊過
@@ -41,7 +41,7 @@ module.exports = {
     };
     return response;
   },
-  signIn: async (email) => {
+  signIn: async (email, res) => {
     // 查詢使用者是否存在
     const signinQuery = 'SELECT * FROM users WHERE email = ?';
     const [is_exist] = await connection.execute(signinQuery, [email]);
