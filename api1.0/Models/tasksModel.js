@@ -2,6 +2,8 @@
 const errorMsg = require('../utils/error');
 const tool = require('../utils/tool');
 const connectionPromise = require('../Models/database').connectionPromise;
+const moment = require('moment-timezone');
+moment.tz.setDefault("Asia/Taipei");
 
 
 module.exports = {
@@ -10,7 +12,7 @@ module.exports = {
         // const connection = await user.poolConnection();
         const connection = await connectionPromise;
         const limit = 11;
-        const finalParam =[];
+        const finalParam = [];
         let decodeCuser = 0;
         if (cursor == null) {
             decodeCuser = Math.pow(2, 64);
@@ -43,7 +45,7 @@ module.exports = {
                         ON T.poster_id = U.id 
                         WHERE T.status = ?
                         ORDER BY T.id DESC LIMIT ?
-                    `, ['pending',limit]);
+                    `, ['pending', limit]);
                 let len = result.length;
                 if (result.length >= limit) len = result.length - 1;
 
@@ -88,7 +90,7 @@ module.exports = {
             }
             const selected = [null, null, null, null];
             const matched = [false, false, false, false];
-        
+
 
             if (location != null) {
                 matched[0] = true;
@@ -130,7 +132,7 @@ module.exports = {
                                     SELECT *
                                     FROM task_with_user_data
                                     `
-            const [result] = await connection.execute(query_string,finalParam);    
+            const [result] = await connection.execute(query_string, finalParam);
             const finalData = [];
             let len = result.length;
             if (result.length >= limit) len = result.length - 1;
@@ -139,28 +141,28 @@ module.exports = {
                 for (var i = 0; i < len; i++) {
                     const post = {
                         id: result[i].id,
-                            poster_id: result[i].poster_id,
-                            created_at: result[i].task_created_at,
-                            closed_at: result[i].task_closed_at,
-                            deadline: result[i].deadline,
-                            task_vacancy: result[i].task_vacancy,
-                            approved_count: result[i].approved_count,
-                            content: result[i].content,
-                            location: result[i].location,
-                            reward: result[i].reward,
-                            picture: result[i].picture,
-                            name: result[i].name,
-                            nickname: result[i].nickname,
-                            sex: result[i].sex,
-                            status: result[i].status
+                        poster_id: result[i].poster_id,
+                        created_at: result[i].task_created_at,
+                        closed_at: result[i].task_closed_at,
+                        deadline: result[i].deadline,
+                        task_vacancy: result[i].task_vacancy,
+                        approved_count: result[i].approved_count,
+                        content: result[i].content,
+                        location: result[i].location,
+                        reward: result[i].reward,
+                        picture: result[i].picture,
+                        name: result[i].name,
+                        nickname: result[i].nickname,
+                        sex: result[i].sex,
+                        status: result[i].status
                     }
                     finalData.push(post);
                 }
             }
-            const cusr = String(result[result.length-2].id);
+            const cusr = String(result[result.length - 2].id);
             let next_cursor = await tool.encryptCursor(cusr);
             next_cursor = encodeURIComponent(next_cursor);
-            const output2={
+            const output2 = {
                 data: {
                     posts: data,
                     next_cursor: result.length < limit ? null : next_cursor
@@ -170,12 +172,53 @@ module.exports = {
             //     posts: data,
             //     next_cursor: result.length < limit ? null : next_cursor
             // }});           
-            return output2;          
+            return output2;
         } catch (error) {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
             // connection.release();
+        }
+    },
+    tasksDetail: async (postId) => {
+        const connection = await connectionPromise;
+        try {
+
+            const query = `SELECT t.*, u.name, u.nickname, u.picture 
+      FROM tasks t
+      LEFT JOIN users u ON t.poster_id = u.id
+      WHERE t.id = ?
+      `;
+
+            const result = await connection.execute(query, [postId]);
+            if (result.length == 0) return errorMsg.taskNotExist(res);
+            const response = {
+                data: {
+                    task: {
+                        id: postId,
+                        title: result.title,
+                        poster_id: result.poster_id,
+                        created_at: moment.utc(taskResult.created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+                        closed_at: moment.utc(taskResult.closed_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+                        deadline: moment.utc(taskResult.deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+                        task_vacancy: result.task_vacancy,
+                        approved_count: result.approved_count,
+                        location: result.location,
+                        reward: result.reward,
+                        content: result.content,
+                        name: result.name,
+                        nickname: result.nickname,
+                        picture: result.picture,
+                        status: result.status,
+                    }
+                }
+            };
+            return response;
+        } catch (error) {
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+            connection.release();
         }
     }
 }
