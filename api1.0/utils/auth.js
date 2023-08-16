@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
+const errorMsg = require('../utils/error');
 const dotenv = require('dotenv');
-const errorMsg = require('../utils/error')
-
 dotenv.config();
 
 // Generate JWT token
@@ -17,15 +16,13 @@ exports.generateJWTToken= (userId) => {
 exports.verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
 
-  if (!token) {
-    return errorMsg.noToken(res);
-  }
-
   try {
+    if (!token) {
+      return errorMsg.noToken(res);
+    }
     const pureToken = token.split(' ')[1];
     const decodedToken = jwt.verify(pureToken, process.env.SECRET);
     req.decodedToken = decodedToken;
-    //console.log(decodedToken);
     next();
   } catch (error) {
     console.error(error);
