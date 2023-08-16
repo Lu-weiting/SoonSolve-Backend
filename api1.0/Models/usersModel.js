@@ -146,9 +146,9 @@ module.exports = {
   getProfile: async (res, targetId, my_id) => {
     const connection = await connectionPromise;
     try {
-      const [targetProfile] = await connection.execute('SELECT U.id AS uid,name,picture,credit FROM users AS U WHERE id = ?', [targetId]);
+      const [targetProfile] = await connection.execute('SELECT U.id AS uid,U.name AS name,U.picture AS picture,U.credit AS credit,C.id AS cid,C.content AS content,DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, C.poster_id AS poster_id FROM users AS U INNER JOIN comments AS C ON C.user_id = U.id WHERE id = ?', [targetId]);
       if (targetProfile.length == 0) return errorMsg.userNotFound(res);
-      const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, userId, userId, targetId]);
+      const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
       let friendship = null;
       if (findFriendshipResult.length > 0) {
         friendship = {
@@ -156,23 +156,27 @@ module.exports = {
           status: findFriendshipResult[0].status
         }
       }
-      const user = {
-        id: actualUserId,
-        name: targetProfile[0].name,
-        picture: targetProfile[0].picture,
-        friend_count: targetProfile[0].friend_count,
-        introduction: targetProfile[0].introduction,
-        tags: targetProfile[0].tags,
-        friendship: friendship
+      const comments = [];
+      for(var i =0;i<targetProfile.length;i++){
+        const comment ={
+          id: targetProfile[i].cid,
+          content: targetProfile[i].content,
+          created_at: moment.utc(targetProfile[i].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+          poster_id: targetProfile[i].poster_id
+        }
+        comments.push(comment);
+      }
+      const data = {
+        user: {
+          id: targetProfile[0].uid,
+          name: targetProfile[0].name,
+          picture: targetProfile[0].picture,
+          credit: targetProfile[0].credit,
+          comment: comments,
+          friendship
+        }
       };
-
-
-
-
-
-
-
-
+      return data;
     } catch (error) {
       errorMsg.query(res);
     } finally {
