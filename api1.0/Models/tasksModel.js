@@ -180,7 +180,7 @@ module.exports = {
             // connection.release();
         }
     },
-    tasksDetail: async (postId) => {
+    tasksDetail: async (res, postId) => {
         const connection = await connectionPromise;
         try {
 

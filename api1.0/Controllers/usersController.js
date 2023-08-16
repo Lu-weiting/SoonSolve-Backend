@@ -1,4 +1,3 @@
-// 引入資料庫連線
 const usersModel = require('../Models/usersModel');
 const errorMsg = require('../utils/error');
 
@@ -9,7 +8,8 @@ module.exports = {
       const type = req.params.type;
       let limit = 10;
       if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
-      await usersModel.tasksRecord(my_id, type, limit);
+      const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);

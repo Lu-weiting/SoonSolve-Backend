@@ -12,6 +12,6 @@ const auth = require('../utils/auth');
 
 // User Sign-in endpoint
 
-router.get('/task_records/:type', auth.verifyToken, usersController.getRecords);
+router.get('/:type/task_records', auth.verifyToken, usersController.getRecords);
 router.get('/:id/profile', auth.verifyToken, usersController.getProfile);
 module.exports = router;
