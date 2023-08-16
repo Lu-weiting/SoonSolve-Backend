@@ -5,12 +5,10 @@ const auth = require('../utils/auth');
 //const upload = require('../utils/upload');
 
 // User Sign Up API endpoint
-//router.post('/signup', usersController.signup);
-
+router.post('/signup', usersController.signup);
 // User Sign-in endpoint
-//router.post('/signin', usersController.signin);
+router.post('/signin', usersController.signin);
 
-// User Sign-in endpoint
 
 router.get('/:type/task_records', auth.verifyToken, usersController.getRecords);
 router.get('/:id/profile', auth.verifyToken, usersController.getProfile);
