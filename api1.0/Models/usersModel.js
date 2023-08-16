@@ -7,17 +7,23 @@ const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
-  tasksRecord: async (my_id, type, limit) => {
+  tasksRecord: async (res, my_id, type, cursor, limit) => {
     const connection = await connectionPromise;
+    let decodeCuser = null;
+    let query;
     try {
-      let nextCursor = null;
-      let query;
+      if(cursor == null){
+        decodeCuser = Math.pow(2, 64);
+      }else {
+        decodeCuser = await tool.decryptCursor(cursor);
+      }
+      
       if(type == 'Released')
       {
         query  = `SELECT t.*, u.name, u.nickname, u.picture 
         FROM tasks t
         LEFT JOIN users u ON t.poster_id = u.id
-        WHERE t.id = ?
+        WHERE t.poster_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ?
         `;
       }else if (type == 'Accepted'){
@@ -39,18 +45,19 @@ module.exports = {
         FROM user_task ut
         LEFT JOIN tasks t ON ut.task_id = t.id
         LEFT JOIN users u ON t.poster_id = u.id
-        WHERE ut.taker_id = ?
+        WHERE ut.taker_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ?
         `;
       }
-      const [results] = await connection.execute(query, [my_id, limit]);
+      const [results] = await connection.execute(query, [my_id, decodeCuser, limit]);
       if (results.length == 0) {
         return error_message.taskNotExist(res);
       }else if(results.length < limit){
         nextCursor = null;
       }else{
         const lastPostId = results[results.length - 1].id;
-        nextCursor = lastPostId;
+        nextCursor = await tool.encryptCursor(lastPostId);
+        nextCursor = encodeURIComponent(nextCursor);
       }
       const promises = results.map(async taskResult => {
         //const taipeiDateTime = moment.utc(results.results.created_at).tz('Asia/Taipei');
@@ -79,10 +86,10 @@ module.exports = {
           const response = {
             data: {
               task: tasksResult,
-              next_cursor: encodeCursor
+              next_cursor: nextCursor
             }
           };
-          res.status(200).json(response);
+          return response;
         })
         .catch(error => {
           console.error(error);

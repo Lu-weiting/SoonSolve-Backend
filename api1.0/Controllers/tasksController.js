@@ -1,7 +1,7 @@
 const task = require('../Models/tasksModel');
 const errorMsg = require('../utils/error');
 module.exports = {
-    search: async (req, res) => {
+    homeSearch: async (req, res) => {
         try{
             const {userId}=req.decodedToken;
             const { location,friend,title, cursor } = req.query;
@@ -20,8 +20,8 @@ module.exports = {
           const taskId = Number(req.params.id);
           if (!taskId) return error_message.input(res);
     
-          const response = await tasksModel.tasksDetail(taskId);
-          return res.status(200).json(response);
+          const response = await tasksModel.tasksDetail(res, taskId);
+          res.status(200).json(response);
         } catch (error) {
           console.error(error);
           errorMsg.dbConnection(res);
