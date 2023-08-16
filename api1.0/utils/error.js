@@ -16,5 +16,8 @@ module.exports = {
     },
     query: (res) => {
         res.status(500).json({ error: 'Server error - query failed' });
+    },
+    userNotFound: (res) =>{
+        res.status(400).json({ error: 'user not found' });
     }
 }
