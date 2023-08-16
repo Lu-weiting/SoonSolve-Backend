@@ -1,7 +1,7 @@
 // const { POOL, QUERY } = require('../utils/database');
 const errorMsg = require('../utils/error');
 const tool = require('../utils/tool');
-const connectionPromise = require('../Models/database').connectionPromise;
+const connectionPromise = require('../utils/database').connectionPromise;
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 

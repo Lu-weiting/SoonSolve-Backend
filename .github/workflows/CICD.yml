@@ -2,7 +2,7 @@ name: ss workflow
 
 on:
   push:
-    branches: [master]
+    branches: [develop]
 
 jobs:
   # test_ss:
