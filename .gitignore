@@ -1,3 +1,4 @@
 soonsolve.pem
-node_modules
+node_modules/
 .env
+private/
