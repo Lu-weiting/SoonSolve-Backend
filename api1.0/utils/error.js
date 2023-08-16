@@ -1,5 +1,11 @@
 module.exports = {
-    inputempty: (res) => {
+    noToken: (res) => {
+        res.status(401).json({ error: 'Client error - no token' })
+    },
+    wrongToken: (res) => {
+        res.status(403).json({ error: 'Wrong token' });
+    },
+    inputEmpty: (res) => {
         res.status(400).json({ error: 'Client error - input feild should not be empty' });
     },
     taskNotExist: (res) => {
