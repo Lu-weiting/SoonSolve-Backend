@@ -2,6 +2,10 @@
 const connectionPromise = require('../utils/database').connectionPromise;
 const errorMsg = require('../utils/error');
 
+//Set Timezone
+const moment = require('moment-timezone'); 
+moment.tz.setDefault("Asia/Taipei");
+
 module.exports = {
   tasksDetail: async (postId) => {
     const connection = await connectionPromise;
@@ -21,9 +25,9 @@ module.exports = {
             id: postId,
             title: result.title,
             poster_id: result.poster_id,
-            created_at: result.created_at,
-            closed_at: result.closed_at,
-            deadline: result.deadline,
+            created_at: moment.utc(taskResult.created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+            closed_at: moment.utc(taskResult.closed_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+            deadline: moment.utc(taskResult.deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
             task_vacancy: result.task_vacancy,
             approved_count: result.approved_count,
             location: result.location,

@@ -1,5 +1,5 @@
 module.exports = {
-    input: (res) => {
+    inputempty: (res) => {
         res.status(400).json({ error: 'Client error - input feild should not be empty' });
     },
     taskNotExist: (res) => {

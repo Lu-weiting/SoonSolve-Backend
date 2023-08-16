@@ -7,8 +7,9 @@ module.exports = {
     try {
       const my_id = req.decoded.id;
       const type = req.params.type;
-      if (type != 'Released' || type != 'Accepted') return error_message.input(res);
-      await usersModel.tasksRecord(my_id, type);
+      let limit = 10;
+      if (type != 'Released' || type != 'Accepted') return error_message.inputempty(res);
+      await usersModel.tasksRecord(my_id, type, limit);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
