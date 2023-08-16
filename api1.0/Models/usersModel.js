@@ -96,5 +96,16 @@ module.exports = {
       console.log('connection release');
       connection.release();
     }
+  },
+  getProfile: async(res,targetId,my_id)=>{
+    const connection = await connectionPromise;
+    try {
+      
+    }catch (error) {
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
   }
 }

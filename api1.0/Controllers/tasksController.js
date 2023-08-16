@@ -1,7 +1,7 @@
 const task = require('../Models/tasksModel');
 const errorMsg = require('../utils/error');
 module.exports = {
-    search: async (req, res) => {
+    homeSearch: async (req, res) => {
         try{
             const {userId}=req.decodedToken;
             const { location,friend,title, cursor } = req.query;

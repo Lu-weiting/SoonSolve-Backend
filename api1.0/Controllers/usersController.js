@@ -1,5 +1,5 @@
 // 引入資料庫連線
-const tasksModel = require('../utils/usersModel');
+const usersModel = require('../Models/usersModel');
 const errorMsg = require('../utils/error');
 
 module.exports = {
@@ -9,7 +9,21 @@ module.exports = {
       const type = req.params.type;
       let limit = 10;
       if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
-      await tasksModel.tasksRecord(my_id, type, limit);
+      await usersModel.tasksRecord(my_id, type, limit);
+    } catch (error) {
+      console.error(error);
+      errorMsg.dbConnection(res);
+    }
+  },
+  getProfile: async (req, res) => {
+    try {
+      const my_id = req.decodedToken.id;
+      const targetId = req.params.id;
+      if (!targetId) return errorMsg.inputEmpty(res);
+      const result = await usersModel.getProfile(res, targetId, my_id);
+      res.status(200).json({
+        ...result
+      });
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
