@@ -34,11 +34,12 @@ module.exports = {
     homeSearch: async (req, res) => {
         try{
           const my_id = req.decodedToken.id;
-            const { location,friend,title, cursor } = req.query;
-            // const {redisClient} = req;
-            
-            const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,my_id);
-            res.status(200).json(result);
+          console.log(my_id);
+          const { location,friend,title, cursor } = req.query;
+          // const {redisClient} = req;
+          
+          const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,my_id);
+          res.status(200).json(result);
         }catch (error) {
             errorMsg.dbConnection(res);
         }
