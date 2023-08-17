@@ -52,6 +52,7 @@ module.exports = {
   },
   getRecords: async (req, res) => {
     try {
+      console.log('connect')
       const my_id = req.decodedToken.id;
       const type = req.params.type;
       let limit = 10;
