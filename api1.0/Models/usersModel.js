@@ -63,11 +63,12 @@ module.exports = {
       }
 
       if (type == 'Released') {
-        query = `SELECT t.*, u.name, u.nickname, u.picture 
+        query = 
+        `SELECT t.*, u.name, u.nickname, u.picture 
         FROM tasks t
         LEFT JOIN users u ON t.poster_id = u.id
         WHERE t.poster_id = ? AND t.id < ?
-        ORDER BY t.id DESC LIMIT ?
+        ORDER BY t.id DESC LIMIT ${limit}
         `;
       } else if (type == 'Accepted') {
         query = `SELECT ut.status,
@@ -89,10 +90,10 @@ module.exports = {
         LEFT JOIN tasks t ON ut.task_id = t.id
         LEFT JOIN users u ON t.poster_id = u.id
         WHERE ut.taker_id = ? AND t.id < ?
-        ORDER BY t.id DESC LIMIT ?
+        ORDER BY t.id DESC LIMIT ${limit}
         `;
       }
-      const [results] = await connection.execute(query, [my_id, decodeCuser, limit]);
+      const [results] = await connection.execute(query, [my_id, decodeCuser]);
       if (results.length == 0) {
         return error_message.taskNotExist(res);
       } else if (results.length < limit) {
