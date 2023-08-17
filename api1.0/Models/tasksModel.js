@@ -107,6 +107,7 @@ module.exports = {
                         ORDER BY T.id DESC LIMIT ?
                     `, ['pending', limit]);
                 let len = result.length;
+                console.log(result);
                 if (result.length >= limit) len = result.length - 1;
 
                 if (result.length != 0) {
@@ -141,12 +142,6 @@ module.exports = {
                     }
                 }
                 return output;
-                // res.status(200).json({
-                //     data: {
-                //         posts: data,
-                //         next_cursor: result.length < limit ? null : next_cursor
-                //     }
-                // });
             }
             const selected = [null, null, null, null];
             const matched = [false, false, false, false];
