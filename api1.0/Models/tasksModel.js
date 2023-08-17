@@ -114,7 +114,7 @@ module.exports = {
                 if (result.length >= limit) len = result.length - 1;
 
                 if (result.length != 0) {
-                    for (var i = 0; i < len; i++) {
+                    for (let i = 0; i < len; i++) {
                         const post = {
                             id: result[i].id,
                             poster_id: result[i].poster_id,
@@ -140,7 +140,7 @@ module.exports = {
                 next_cursor = encodeURIComponent(next_cursor);
                 const output = {
                     data: {
-                        posts: data,
+                        tasks: data,
                         next_cursor: result.length < limit ? null : next_cursor
                     }
                 }
@@ -194,7 +194,7 @@ module.exports = {
             if (result.length >= limit) len = result.length - 1;
 
             if (result.length != 0) {
-                for (var i = 0; i < len; i++) {
+                for (let i = 0; i < len; i++) {
                     const post = {
                         id: result[i].id,
                         poster_id: result[i].poster_id,
@@ -220,7 +220,7 @@ module.exports = {
             next_cursor = encodeURIComponent(next_cursor);
             const output2 = {
                 data: {
-                    tasks: data,
+                    tasks: finalData,
                     next_cursor: result.length < limit ? null : next_cursor
                 }
             };         
