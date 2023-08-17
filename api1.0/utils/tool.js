@@ -7,11 +7,11 @@ dotenv.config()
 module.exports = {
 
     encryptCursor: async (cursor) => {
-        const encrypted = CryptoJS.AES.encrypt(cursor.toString(), process.env.secret).toString();
+        const encrypted = CryptoJS.AES.encrypt(cursor.toString(), process.env.SECRET).toString();
         return encrypted;
     },
     decryptCursor: async (encryptedCursor) => {
-      const decryptedBytes = CryptoJS.AES.decrypt(encryptedCursor, process.env.secret);
+      const decryptedBytes = CryptoJS.AES.decrypt(encryptedCursor, process.env.SECRET);
       const decryptedCursor = decryptedBytes.toString(CryptoJS.enc.Utf8);
       return parseInt(decryptedCursor, 10);
     },

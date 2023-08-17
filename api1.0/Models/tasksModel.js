@@ -105,7 +105,7 @@ module.exports = {
                     FROM tasks AS T LEFT JOIN users AS U
                     ON T.poster_id = U.id 
                     WHERE T.status = ? 
-                    ORDER BY T.id DESC LIMIT 11
+                    ORDER BY T.id DESC LIMIT ${limit}
                     `, 
                     ['pending']);
                 let len = result.length;
@@ -176,10 +176,8 @@ module.exports = {
             const trueIndexes = matched.map((value, index) => ({ value, index }))
                 .filter(item => item.value === true)
                 .map(item => item.index);
-            for (var i = 0; i < trueIndexes.length; i++) {
-                // if(i == trueIndexes.length-1 ) {
-                //     filter_query = `${filter_query}${selected[trueIndexes[i]]}`
-                // }
+            for (let i = 0; i < trueIndexes.length; i++) {
+
                 filter_query = `${filter_query}${selected[trueIndexes[i]]} AND `;
             }
             filter_query += `T.id < ${decodeCuser} ORDER BY T.id DESC LIMIT ${limit}`;
@@ -222,7 +220,7 @@ module.exports = {
             next_cursor = encodeURIComponent(next_cursor);
             const output2 = {
                 data: {
-                    posts: data,
+                    tasks: data,
                     next_cursor: result.length < limit ? null : next_cursor
                 }
             };         
