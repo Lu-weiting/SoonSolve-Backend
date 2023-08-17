@@ -2,6 +2,7 @@
 const connectionPromise = require('../utils/database').connectionPromise;
 const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
 const auth = require('../utils/auth')
+const tool = require('../utils/tool');
 const errorMsg = require('../utils/error');
 
 //Set Timezone
@@ -64,28 +65,31 @@ module.exports = {
 
       if (type == 'Released') {
         query = 
-        `SELECT t.*, u.name, u.nickname, u.picture 
+        `
+        SELECT t.*, u.name, u.nickname, u.picture 
         FROM tasks t
         LEFT JOIN users u ON t.poster_id = u.id
         WHERE t.poster_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ${limit}
         `;
       } else if (type == 'Accepted') {
-        query = `SELECT ut.status,
-        t.id,
-        t.poster_id,
-        t.created_at,
-        t.closed_at,
-        t.deadline,
-        t.task_vacancy,
-        t.approved_count,
-        t.content,
-        t.location,
-        t.reward,
-        t.picture,
-        u.name,
-        u.nickname,
-        u.picture 
+        query = 
+        `
+        SELECT ut.status,
+          t.id,
+          t.poster_id,
+          t.created_at,
+          t.closed_at,
+          t.deadline,
+          t.task_vacancy,
+          t.approved_count,
+          t.content,
+          t.location,
+          t.reward,
+          t.picture,
+          u.name,
+          u.nickname,
+          u.picture 
         FROM user_task ut
         LEFT JOIN tasks t ON ut.task_id = t.id
         LEFT JOIN users u ON t.poster_id = u.id
