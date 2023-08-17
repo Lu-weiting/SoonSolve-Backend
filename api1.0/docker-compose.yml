@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
 
-  SoonS:
+  soonsolve:
       build: 
         context: .
         dockerfile: Dockerfile
-      container_name: SS_container
+      container_name: ss_container
       volumes:
         - userImage:/soonsolve/static
       networks:
@@ -33,7 +33,7 @@ services:
     networks:
       - ss_network  
     depends_on:
-      - SoonS
+      - soonsolve
 
 volumes:
   userImage:
