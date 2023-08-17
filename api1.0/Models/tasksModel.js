@@ -10,7 +10,7 @@ module.exports = {
     createTask: async (res, userId, context) => {
         const connection = await connectionPromise;
         try {
-            const query = 'INSERT INTO tasks (title, content, created_at, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, NOW(),?, ?, ?, ?, ?, ?)';
+            const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
             const response = {
                 data: {
