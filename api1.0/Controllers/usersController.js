@@ -56,7 +56,7 @@ module.exports = {
       const type = req.params.type;
       let limit = 10;
       if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
-      const result = await user.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
+      const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -68,8 +68,8 @@ module.exports = {
       const my_id = req.decodedToken.id;
       const targetId = req.params.id;
       if (!targetId) return errorMsg.inputEmpty(res);
-      const result = await user.getProfile(res, targetId, my_id);
-      res.status(200).json(result);
+      const result = await usersModel.getProfile(res, targetId, my_id);
+      return res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
@@ -84,7 +84,7 @@ module.exports = {
         // const { redisClient } = req;
         console.log(req.file.filename);
         console.log(__dirname);
-        const result = await user.pictureUpdate(res, my_id, req.file.filename);
+        const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
         res.status(200).json(result);
     } catch (error) {
       console.error(error);
