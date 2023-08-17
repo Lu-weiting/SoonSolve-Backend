@@ -10,8 +10,8 @@ module.exports = {
     createTask: async (res, userId, context) => {
         const connection = await connectionPromise;
         try {
-            const query = 'INSERT INTO tasks (title, content, created_at, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, NOW(),?, ?, ?, ?, ?, ?)';
-            const [result] = await connection.execute(query, [context.title, context.content, context.created_at, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
+            const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+            const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
             const response = {
                 data: {
                     task: {
@@ -119,7 +119,7 @@ module.exports = {
                 next_cursor = encodeURIComponent(next_cursor);
                 const output = {
                     data: {
-                        posts: data,
+                        tasks: data,
                         next_cursor: result.length < limit ? null : next_cursor
                     }
                 }
@@ -202,13 +202,17 @@ module.exports = {
                     finalData.push(post);
                 }
             }
-            const cusr = String(result[result.length - 2].id);
-            let next_cursor = await tool.encryptCursor(cusr);
-            next_cursor = encodeURIComponent(next_cursor);
+            const cusr= result.length < limit ? null : String(result[result.length - 2].id);
+            // const cusr = String(result[result.length - 2].id);
+            let next_cursor = null;
+            if(cusr != null){
+                next_cursor = await tool.encryptCursor(cusr);
+                next_cursor = encodeURIComponent(next_cursor);
+            }
             const output2 = {
                 data: {
-                    posts: data,
-                    next_cursor: result.length < limit ? null : next_cursor
+                    tasks: finalData,
+                    next_cursor: next_cursor
                 }
             };
             // res.status(200).json({data: {

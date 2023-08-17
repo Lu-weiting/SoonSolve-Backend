@@ -4,7 +4,7 @@ module.exports = {
     createTask: async (req, res) => {
       try{
         const {userId} = req.decodedToken;
-        const {context} = req.body;
+        const context = req.body;
         if(context){
           const result = await tasksModel.createTask(res, userId, context);
           res.status(200).json(result);
