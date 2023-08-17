@@ -139,9 +139,9 @@ module.exports = {
       }
     } catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } finally {
       console.log('connection release');
-      connection.release();
     }
   },
   getProfile: async (res, targetId, my_id) => {
@@ -216,6 +216,7 @@ module.exports = {
 
     } catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } finally {
       console.log('connection release');
     }
