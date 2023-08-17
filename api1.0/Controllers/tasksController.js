@@ -50,7 +50,7 @@ module.exports = {
           if (!taskId) return errorMsg.inputEmpty(res);
     
           const result = await tasksModel.tasksDetail(res, taskId);
-          res.status(200).json(result);
+          return res.status(200).json(result);
         } catch (error) {
           console.error(error);
           errorMsg.dbConnection(res);

@@ -298,7 +298,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     }
 }
