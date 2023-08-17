@@ -216,6 +216,7 @@ module.exports = {
             // }});           
             return output2;
         } catch (error) {
+            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -257,6 +258,7 @@ module.exports = {
             };
             return response;
         } catch (error) {
+            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -279,6 +281,7 @@ module.exports = {
             };
             return data
         } catch (error) {
+            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');

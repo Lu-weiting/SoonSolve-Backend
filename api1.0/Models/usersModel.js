@@ -138,6 +138,7 @@ module.exports = {
         throw new Error('Server error');
       }
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {
@@ -192,6 +193,7 @@ module.exports = {
       };
       return data;
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {
@@ -215,6 +217,26 @@ module.exports = {
       return data;
 
     } catch (error) {
+      console.log(error);
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
+  },
+  profileUpdate: async (res, sex, userId) => {
+    const connection = await connectionPromise;
+    try {
+      await connection.execute('UPDATE users SET sex = ? WHERE id = ?', [sex, userId]);
+      const output = { id: userId };
+      const data = {
+        data: {
+          output
+        }
+      }
+      return data;
+    } catch (error) {
+      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {

@@ -6,14 +6,14 @@ const errorMsg = require('../utils/error');
 
 
 module.exports = {
-  signUp: async(req, res) => {
+  signUp: async (req, res) => {
     const { name, email, password } = req.body;
 
     // 檢查必填欄位是否都有輸入
     if (!name || !password || !email) {
       return errorMsg.inputEmpty(res);
     }
-  
+
     // 檢查 email 格式是否正確
     if (!tool.checkEmailRegex(email)) {
       return errorMsg.wrongEmail(res);
@@ -21,7 +21,7 @@ module.exports = {
     const response = await usersModel.signUp(name, email, password, res);
     return res.json(response);
   },
-  signIn: async(req, res) => {
+  signIn: async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
@@ -56,7 +56,7 @@ module.exports = {
       const type = req.params.type;
       let limit = 10;
       if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
-      const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
+      const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor : null, limit);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -77,15 +77,27 @@ module.exports = {
   },
   pictureUpdate: async (req, res) => {
     try {
-        if (!req.headers['content-type']) return errorMsg.inputEmpty(res);
-        if (!req.headers['content-type'].includes('multipart/form-data')) return errorMsg.contentType(res);
-        const my_id = req.decodedToken.id;
-        
-        // const { redisClient } = req;
-        console.log(req.file.filename);
-        console.log(__dirname);
-        const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
-        res.status(200).json(result);
+      if (!req.headers['content-type']) return errorMsg.inputEmpty(res);
+      if (!req.headers['content-type'].includes('multipart/form-data')) return errorMsg.contentType(res);
+      const my_id = req.decodedToken.id;
+
+      // const { redisClient } = req;
+      console.log(req.file.filename);
+      console.log(__dirname);
+      const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      errorMsg.dbConnection(res);
+    }
+  },
+  profileUpdate: async (req, res) => {
+    try {
+      if (req.headers['content-type'] != 'application/json') return errorMsg.contentType(res);
+      const { sex } = req.body;
+      const my_id = req.decodedToken.id;
+      const result = await usersModel.profileUpdate(res,sex,my_id);
+      res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
