@@ -224,7 +224,6 @@ module.exports = {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
-      connection.release();
     }
   },
   profileUpdate: async (res, sex, userId) => {
