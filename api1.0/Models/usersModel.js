@@ -195,7 +195,6 @@ module.exports = {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
-      connection.release();
     }
   },
   pictureUpdate: async (res, my_id, filename) => {
@@ -218,7 +217,6 @@ module.exports = {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
-      connection.release();
     }
   }
 
