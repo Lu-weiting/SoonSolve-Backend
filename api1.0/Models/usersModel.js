@@ -158,10 +158,10 @@ module.exports = {
           C.id AS cid,C.content AS content,
           DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, 
           C.poster_id AS poster_id 
-        FROM users AS U INNER JOIN comments AS C 
+        FROM users AS U LEFT JOIN comments AS C 
         ON C.user_id = U.id WHERE U.id = ?
       `
-      const targetProfile = await connection.execute(getProfileQuery, [targetId]);
+      const [targetProfile] = await connection.execute(getProfileQuery, [targetId]);
       console.log(my_id);
       console.log(targetId);
       console.log(targetProfile);
