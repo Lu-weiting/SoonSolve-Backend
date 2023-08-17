@@ -27,6 +27,28 @@ module.exports = {
             connection.release();
         }
     },
+    deletetask: async (res, taskId, userId) => {
+        const connection = await connectionPromise;
+        try {
+            const query = 'DELETE FROM tasks WHERE id = ? AND poster_id = ?';
+            const result = await connection.execute(query, [taskId, userId]) ;
+            if (result.affectedRows > 0){
+                const response = {
+                    data: {
+                        task: {
+                            id: taskId
+                        }
+                    }
+                };
+                return response;
+            }
+        } catch (error) {
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+            connection.release();
+        }
+    },
     homeSearch: async (res, cursor, location, friend, title, sex, userId) => {
         // undo db set
         // const connection = await user.poolConnection();

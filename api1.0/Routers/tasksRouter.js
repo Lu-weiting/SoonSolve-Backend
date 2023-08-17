@@ -7,6 +7,9 @@ const auth = require('../utils/auth');
 // Posts Created API
 router.post('/', auth.verifyToken, tasksController.createTask);
 
+// Posts Delete Like API
+router.delete('/:id', auth.verifyToken, postsController.deletetask);
+
 // User get search tasks API
 router.get('/search',auth.verifyToken,tasksController.homeSearch);
 <<<<<<< HEAD
