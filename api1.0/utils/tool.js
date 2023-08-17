@@ -1,5 +1,6 @@
 const CryptoJS = require('crypto-js');
 const multer = require('multer'); // 引入 multer 套件，用於處理上傳檔案
+const path = require('path');
 //import dotenv from 'dotenv'
 const dotenv = require('dotenv');
 dotenv.config()
