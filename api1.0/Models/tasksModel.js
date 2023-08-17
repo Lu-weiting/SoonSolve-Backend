@@ -25,7 +25,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     deletetask: async (res, taskId, userId) => {
@@ -45,9 +44,9 @@ module.exports = {
             }
         } catch (error) {
             errorMsg.query(res);
+            console.log(error);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     homeSearch: async (res, cursor, location, friend, title, sex, userId) => {
@@ -63,17 +62,26 @@ module.exports = {
             decodeCuser = await tool.decryptCursor(cursor);
         }
         try {
-            const my_friend_query_string = `SELECT F.senderId AS friend_id
+            const my_friend_query_string = `SELECT F.sender_id AS friend_id
                                                 FROM friendship AS F LEFT JOIN users AS U
-                                                ON F.senderId = U.id
-                                                WHERE status = ? AND receiverId = ?
+                                                ON F.sender_id = U.id
+                                                WHERE status = ? AND receiver_id = ?
                                                 UNION
-                                                SELECT F.receiverId AS friend_id
+                                                SELECT F.receiver_id AS friend_id
                                                 FROM friendship AS F LEFT JOIN users AS U
-                                                ON F.receiverId = U.id
-                                                WHERE status = ? AND senderId = ?`
+                                                ON F.receiver_id = U.id
+                                                WHERE status = ? AND sender_id = ?`
             let filter_query = `
-                                    SELECT T.id, T.title, T.content, DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, T.task_vacancy, T.approved_count, T.location, T.reward, T.status, T.poster_id,U.picture, U.name, U.id AS user_id, U.nickname, U.sex
+                                    SELECT 
+                                        T.id, 
+                                        T.title, 
+                                        T.content, 
+                                        DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
+                                        T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
+                                        T.task_vacancy, T.approved_count, 
+                                        T.location, T.reward, 
+                                        T.status, T.poster_id,U.picture, 
+                                        U.name, U.id AS user_id, U.nickname, U.sex
                                     FROM tasks AS T LEFT JOIN users AS U
                                     ON T.poster_id = U.id
                                     WHERE T.status = ? AND 
@@ -81,19 +89,32 @@ module.exports = {
             finalParam.push('pending');
             const data = [];
             if (location == null && friend == null && title == null && sex == null) {
+                console.log('test 1');
                 const [result] = await connection.execute(
                     `
-                        SELECT T.id, T.title, T.content, DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, T.task_vacancy, T.approved_count, T.location, T.reward, T.status, T.poster_id,U.picture, U.name, U.id AS user_id, U.nickname, U.sex
-                        FROM tasks AS T LEFT JOIN users AS U
-                        ON T.poster_id = U.id 
-                        WHERE T.status = ?
-                        ORDER BY T.id DESC LIMIT ?
-                    `, ['pending', limit]);
+                    SELECT 
+                        T.id AS id, 
+                        T.title, 
+                        T.content, 
+                        DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
+                        T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
+                        T.task_vacancy, T.approved_count, 
+                        T.location, T.reward, 
+                        T.status, T.poster_id, U.picture, 
+                        U.name, U.id AS user_id, 
+                        U.nickname, U.sex
+                    FROM tasks AS T LEFT JOIN users AS U
+                    ON T.poster_id = U.id 
+                    WHERE T.status = ? 
+                    ORDER BY T.id DESC LIMIT ${limit}
+                    `, 
+                    ['pending']);
                 let len = result.length;
+                console.log('test 2');
                 if (result.length >= limit) len = result.length - 1;
 
                 if (result.length != 0) {
-                    for (var i = 0; i < len; i++) {
+                    for (let i = 0; i < len; i++) {
                         const post = {
                             id: result[i].id,
                             poster_id: result[i].poster_id,
@@ -102,7 +123,7 @@ module.exports = {
                             deadline: moment.utc(result[i].deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
                             task_vacancy: result[i].task_vacancy,
                             approved_count: result[i].approved_count,
-                            content: result[i].content,
+                            title: result[i].title,
                             location: result[i].location,
                             reward: result[i].reward,
                             picture: result[i].picture,
@@ -124,12 +145,6 @@ module.exports = {
                     }
                 }
                 return output;
-                // res.status(200).json({
-                //     data: {
-                //         posts: data,
-                //         next_cursor: result.length < limit ? null : next_cursor
-                //     }
-                // });
             }
             const selected = [null, null, null, null];
             const matched = [false, false, false, false];
@@ -156,15 +171,13 @@ module.exports = {
             if (sex != null) {
                 matched[3] = true;
                 finalParam.push(sex);
-                selected[3] = `T.sex = ?`;
+                selected[3] = `U.sex = ?`;
             }
             const trueIndexes = matched.map((value, index) => ({ value, index }))
                 .filter(item => item.value === true)
                 .map(item => item.index);
-            for (var i = 0; i < trueIndexes.length; i++) {
-                // if(i == trueIndexes.length-1 ) {
-                //     filter_query = `${filter_query}${selected[trueIndexes[i]]}`
-                // }
+            for (let i = 0; i < trueIndexes.length; i++) {
+
                 filter_query = `${filter_query}${selected[trueIndexes[i]]} AND `;
             }
             filter_query += `T.id < ${decodeCuser} ORDER BY T.id DESC LIMIT ${limit}`;
@@ -181,7 +194,7 @@ module.exports = {
             if (result.length >= limit) len = result.length - 1;
 
             if (result.length != 0) {
-                for (var i = 0; i < len; i++) {
+                for (let i = 0; i < len; i++) {
                     const post = {
                         id: result[i].id,
                         poster_id: result[i].poster_id,
@@ -190,7 +203,7 @@ module.exports = {
                         deadline: moment.utc(result[i].deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
                         task_vacancy: result[i].task_vacancy,
                         approved_count: result[i].approved_count,
-                        content: result[i].content,
+                        title: result[i].title,
                         location: result[i].location,
                         reward: result[i].reward,
                         picture: result[i].picture,
@@ -215,17 +228,12 @@ module.exports = {
                     next_cursor: next_cursor
                 }
             };
-            // res.status(200).json({data: {
-            //     posts: data,
-            //     next_cursor: result.length < limit ? null : next_cursor
-            // }});           
             return output2;
         } catch (error) {
             console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            // connection.release();
         }
     },
     tasksDetail: async (res, postId) => {
@@ -233,10 +241,10 @@ module.exports = {
         try {
 
             const query = `SELECT t.*, u.name, u.nickname, u.picture 
-      FROM tasks t
-      LEFT JOIN users u ON t.poster_id = u.id
-      WHERE t.id = ?
-      `;
+                            FROM tasks t
+                            LEFT JOIN users u ON t.poster_id = u.id
+                            WHERE t.id = ?
+                            `;
 
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
@@ -267,7 +275,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     updateTask: async(res,requestBody,taskId,userId)=>{
@@ -276,7 +283,24 @@ module.exports = {
             const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
             if(findTask.length == 0) return errorMsg.taskNotExist(res);
             if (findTask[0].poster_id != userId) return errorMsg.cannotUpdateTask(res);
-            await connection.execute('UPDATE tasks SET ? WHERE id = ?', [requestBody, taskId]);
+            const updateQuery = 
+            `
+            UPDATE tasks 
+            SET
+                id = ?,
+                title = ?,
+                content = ?,
+                deadline = ?,
+                task_vacancy = ?,
+                approved_count = ?,
+                location = ?,
+                reward = ?,
+                status = ?,
+                poster_id = ?
+            WHERE id = ?
+            `;
+            const {id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id,} = requestBody
+            await connection.execute(updateQuery, [id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id, taskId]);
             const data = {
                 data: {
                     task: {
@@ -290,7 +314,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     }
 }

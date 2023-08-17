@@ -224,7 +224,6 @@ module.exports = {
       errorMsg.query(res);
     } finally {
       console.log('connection release');
-      connection.release();
     }
   },
   profileUpdate: async (res, sex, userId) => {
@@ -239,7 +238,6 @@ module.exports = {
       }
       return data;
     } catch (error) {
-      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {

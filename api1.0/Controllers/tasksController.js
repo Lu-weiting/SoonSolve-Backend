@@ -13,12 +13,13 @@ module.exports = {
         }
       }catch (error) {
           errorMsg.dbConnection(res);
+          console.error(error);
       }
     },
     deletetask: async (req, res) => {
       try{
         const taskId = Number(req.params.id);
-        const {userId} = req.decodedToken;
+        const userId = req.decodedToken.id;
         if(!isNaN(taskId)){
           const result = await tasksModel.deletetask(res, taskId, userId);
           res.status(200).json(result);
@@ -32,11 +33,12 @@ module.exports = {
     homeSearch: async (req, res) => {
         try{
           const my_id = req.decodedToken.id;
-            const { location,friend,title, cursor } = req.query;
-            // const {redisClient} = req;
-            
-            const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,my_id);
-            res.status(200).json(result);
+          console.log(my_id);
+          const { location, friend, title, cursor, sex } = req.query;
+          // const {redisClient} = req;
+          
+          const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,sex ? Number(sex) : null,my_id);
+          res.status(200).json(result);
         }catch (error) {
             errorMsg.dbConnection(res);
         }
@@ -47,7 +49,7 @@ module.exports = {
           if (!taskId) return errorMsg.inputEmpty(res);
     
           const result = await tasksModel.tasksDetail(res, taskId);
-          res.status(200).json(result);
+          return res.status(200).json(result);
         } catch (error) {
           console.error(error);
           errorMsg.dbConnection(res);

@@ -1,5 +1,6 @@
 const CryptoJS = require('crypto-js');
 const multer = require('multer'); // 引入 multer 套件，用於處理上傳檔案
+const path = require('path');
 //import dotenv from 'dotenv'
 const dotenv = require('dotenv');
 dotenv.config()
@@ -7,11 +8,11 @@ dotenv.config()
 module.exports = {
 
     encryptCursor: async (cursor) => {
-        const encrypted = CryptoJS.AES.encrypt(cursor.toString(), process.env.secret).toString();
+        const encrypted = CryptoJS.AES.encrypt(cursor.toString(), process.env.SECRET).toString();
         return encrypted;
     },
     decryptCursor: async (encryptedCursor) => {
-      const decryptedBytes = CryptoJS.AES.decrypt(encryptedCursor, process.env.secret);
+      const decryptedBytes = CryptoJS.AES.decrypt(encryptedCursor, process.env.SECRET);
       const decryptedCursor = decryptedBytes.toString(CryptoJS.enc.Utf8);
       return parseInt(decryptedCursor, 10);
     },

@@ -54,8 +54,9 @@ module.exports = {
     try {
       const my_id = req.decodedToken.id;
       const type = req.params.type;
+      console.log(type);
       let limit = 10;
-      if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
+      if (type != 'Released' && type != 'Accepted') return errorMsg.inputEmpty(res);
       const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor : null, limit);
       res.status(200).json(result);
     } catch (error) {
@@ -97,7 +98,7 @@ module.exports = {
       const { sex } = req.body;
       const my_id = req.decodedToken.id;
       const result = await usersModel.profileUpdate(res,sex,my_id);
-      res.status(200).json(result);
+      return res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
