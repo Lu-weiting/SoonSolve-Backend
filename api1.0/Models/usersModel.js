@@ -162,6 +162,7 @@ module.exports = {
         ON C.user_id = U.id WHERE U.id = ?
       `
       const [targetProfile] = await connection.execute(getProfileQuery, [targetId]);
+      console.log(targetId)
       console.log(targetProfile);
       if (targetProfile.length == 0) return errorMsg.userNotFound(res);
       const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
