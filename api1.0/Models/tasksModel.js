@@ -242,10 +242,10 @@ module.exports = {
         try {
 
             const query = `SELECT t.*, u.name, u.nickname, u.picture 
-      FROM tasks t
-      LEFT JOIN users u ON t.poster_id = u.id
-      WHERE t.id = ?
-      `;
+                            FROM tasks t
+                            LEFT JOIN users u ON t.poster_id = u.id
+                            WHERE t.id = ?
+                            `;
 
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
@@ -276,7 +276,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     updateTask: async(res,requestBody,taskId,userId)=>{
