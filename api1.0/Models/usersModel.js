@@ -98,7 +98,7 @@ module.exports = {
       }
       const [results] = await connection.execute(query, [my_id, decodeCuser]);
       if (results.length == 0) {
-        return error_message.taskNotExist(res);
+        return errorMsg.taskNotExist(res);
       } else if (results.length < limit) {
         nextCursor = null;
       } else {
@@ -142,7 +142,6 @@ module.exports = {
         throw new Error('Server error');
       }
     } catch (error) {
-      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {
