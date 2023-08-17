@@ -66,7 +66,7 @@ module.exports = {
   getProfile: async (req, res) => {
     try {
       const my_id = req.decodedToken.id;
-      const targetId = req.params.id;
+      const targetId = Number(req.params.id);
       if (!targetId) return errorMsg.inputEmpty(res);
       const result = await usersModel.getProfile(res, targetId, my_id);
       return res.status(200).json(result);
