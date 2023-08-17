@@ -25,7 +25,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     deletetask: async (res, taskId, userId) => {
@@ -47,7 +46,6 @@ module.exports = {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     homeSearch: async (res, cursor, location, friend, title, sex, userId) => {
@@ -210,18 +208,13 @@ module.exports = {
                     posts: data,
                     next_cursor: result.length < limit ? null : next_cursor
                 }
-            };
-            // res.status(200).json({data: {
-            //     posts: data,
-            //     next_cursor: result.length < limit ? null : next_cursor
-            // }});           
+            };         
             return output2;
         } catch (error) {
             console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            // connection.release();
         }
     },
     tasksDetail: async (res, postId) => {
