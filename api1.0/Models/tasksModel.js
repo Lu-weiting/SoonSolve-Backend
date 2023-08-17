@@ -105,9 +105,9 @@ module.exports = {
                     FROM tasks AS T LEFT JOIN users AS U
                     ON T.poster_id = U.id 
                     WHERE T.status = ? 
-                    ORDER BY T.id DESC LIMIT ?
+                    ORDER BY T.id DESC LIMIT 11
                     `, 
-                    ['pending', limit]);
+                    ['pending']);
                 let len = result.length;
                 console.log('test 2');
                 console.log(result);
