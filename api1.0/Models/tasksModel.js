@@ -215,15 +215,19 @@ module.exports = {
                     finalData.push(post);
                 }
             }
-            const cusr = String(result[result.length - 2].id);
-            let next_cursor = await tool.encryptCursor(cusr);
-            next_cursor = encodeURIComponent(next_cursor);
+            const cusr= result.length < limit ? null : String(result[result.length - 2].id);
+            // const cusr = String(result[result.length - 2].id);
+            let next_cursor = null;
+            if(cusr != null){
+                next_cursor = await tool.encryptCursor(cusr);
+                next_cursor = encodeURIComponent(next_cursor);
+            }
             const output2 = {
                 data: {
                     tasks: finalData,
-                    next_cursor: result.length < limit ? null : next_cursor
+                    next_cursor: next_cursor
                 }
-            };         
+            };
             return output2;
         } catch (error) {
             console.log(error);
