@@ -71,7 +71,16 @@ module.exports = {
                                                 ON F.receiverId = U.id
                                                 WHERE status = ? AND senderId = ?`
             let filter_query = `
-                                    SELECT T.id, T.title, T.content, DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, T.task_vacancy, T.approved_count, T.location, T.reward, T.status, T.poster_id,U.picture, U.name, U.id AS user_id, U.nickname, U.sex
+                                    SELECT 
+                                        T.id, 
+                                        T.title, 
+                                        T.content, 
+                                        DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
+                                        T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
+                                        T.task_vacancy, T.approved_count, 
+                                        T.location, T.reward, 
+                                        T.status, T.poster_id,U.picture, 
+                                        U.name, U.id AS user_id, U.nickname, U.sex
                                     FROM tasks AS T LEFT JOIN users AS U
                                     ON T.poster_id = U.id
                                     WHERE T.status = ? AND 
@@ -81,7 +90,17 @@ module.exports = {
             if (location == null && friend == null && title == null && sex == null) {
                 const [result] = await connection.execute(
                     `
-                        SELECT T.id, T.title, T.content, DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, T.task_vacancy, T.approved_count, T.location, T.reward, T.status, T.poster_id,U.picture, U.name, U.id AS user_id, U.nickname, U.sex
+                        SELECT 
+                            T.id AS id, 
+                            T.title, 
+                            T.content, 
+                            DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
+                            T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
+                            T.task_vacancy, T.approved_count, 
+                            T.location, T.reward, 
+                            T.status, T.poster_id, U.picture, 
+                            U.name, U.id AS user_id, 
+                            U.nickname, U.sex
                         FROM tasks AS T LEFT JOIN users AS U
                         ON T.poster_id = U.id 
                         WHERE T.status = ?
