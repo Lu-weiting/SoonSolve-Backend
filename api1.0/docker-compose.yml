@@ -2,6 +2,16 @@ version: '3.8'
 
 services:
 
+  SoonS:
+      build: 
+        context: .
+        dockerfile: Dockerfile
+      container_name: SS_container
+      volumes:
+        userImage:/soonsolve/static
+      networks:
+        - ss_network
+
   # redis:
   #   # image: redis:6.0.16
   #   # container_name: redis

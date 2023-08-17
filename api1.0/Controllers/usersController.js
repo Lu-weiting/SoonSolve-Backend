@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 const usersModel = require('../Models/usersModel');
 const auth = require('../utils/auth')
 const tool = require('../utils/tool')
 const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
-=======
-const user = require('../Models/usersModel');
->>>>>>> 9be1c5b0de94544ef9bddabcb3593695b01d308d
 const errorMsg = require('../utils/error');
 
 
@@ -22,11 +18,7 @@ module.exports = {
     if (!tool.checkEmailRegex(email)) {
       return errorMsg.wrongEmail(res);
     }
-<<<<<<< HEAD
     const response = await usersModel.signUp(name, email, password, res);
-=======
-    const response = await user.signUp(name, email, password);
->>>>>>> 9be1c5b0de94544ef9bddabcb3593695b01d308d
     return res.json(response);
   },
   signIn: async(req, res) => {
@@ -38,11 +30,7 @@ module.exports = {
       return errorMsg.inputEmpty(res);
     }
 
-<<<<<<< HEAD
     const user = await usersModel.signIn(email, res);
-=======
-    const user = await user.signIn(email);
->>>>>>> 9be1c5b0de94544ef9bddabcb3593695b01d308d
 
     // 驗證密碼是否正確
     const PASSWORD = user.password;
