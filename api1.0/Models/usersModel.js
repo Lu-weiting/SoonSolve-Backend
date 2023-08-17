@@ -159,7 +159,7 @@ module.exports = {
           DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, 
           C.poster_id AS poster_id 
         FROM users AS U INNER JOIN comments AS C 
-        ON C.user_id = U.id WHERE id = ?
+        ON C.user_id = U.id WHERE U.id = ?
       `
       const [targetProfile] = await connection.execute(getProfileQuery, [targetId]);
       if (targetProfile.length == 0) return errorMsg.userNotFound(res);
