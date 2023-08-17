@@ -137,6 +137,7 @@ module.exports = {
         throw new Error('Server error');
       }
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
     } finally {
       console.log('connection release');
@@ -178,6 +179,7 @@ module.exports = {
       };
       return data;
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
     } finally {
       console.log('connection release');
@@ -201,6 +203,7 @@ module.exports = {
       return data;
 
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
     } finally {
       console.log('connection release');
@@ -219,6 +222,7 @@ module.exports = {
       }
       return data;
     } catch (error) {
+      console.log(error);
       errorMsg.query(res);
     } finally {
       console.log('connection release');
