@@ -6,6 +6,7 @@ const auth = require('../utils/auth');
 
 // User get tasks detail API
 router.get('/search',auth.verifyToken,tasksController.homeSearch);
+router.put('/:task_id',auth.verifyToken,tasksController.updateTask);
 router.get('/:id', auth.verifyToken, tasksController.getDetail);
 
 module.exports = router;

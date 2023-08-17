@@ -1,4 +1,4 @@
-const usersModel = require('../Models/usersModel');
+const user = require('../Models/usersModel');
 const errorMsg = require('../utils/error');
 
 
@@ -15,7 +15,7 @@ module.exports = {
     if (!tool.checkEmailRegex(email)) {
       return errorMsg.wrongEmail(res);
     }
-    const response = await usersModel.signUp(name, email, password);
+    const response = await user.signUp(name, email, password);
     return res.json(response);
   },
   signIn: async(req, res) => {
@@ -27,7 +27,7 @@ module.exports = {
       return errorMsg.inputEmpty(res);
     }
 
-    const user = await usersModel.signIn(email);
+    const user = await user.signIn(email);
 
     // 驗證密碼是否正確
     const PASSWORD = user.password;
@@ -53,7 +53,7 @@ module.exports = {
       const type = req.params.type;
       let limit = 10;
       if (type != 'Released' || type != 'Accepted') return errorMsg.inputEmpty(res);
-      const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
+      const result = await user.tasksRecord(res, my_id, type, cursor ? cursor: null , limit);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -65,7 +65,7 @@ module.exports = {
       const my_id = req.decodedToken.id;
       const targetId = req.params.id;
       if (!targetId) return errorMsg.inputEmpty(res);
-      const result = await usersModel.getProfile(res, targetId, my_id);
+      const result = await user.getProfile(res, targetId, my_id);
       res.status(200).json(result);
     } catch (error) {
       console.error(error);
@@ -81,11 +81,11 @@ module.exports = {
         // const { redisClient } = req;
         console.log(req.file.filename);
         console.log(__dirname);
-        const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
+        const result = await user.pictureUpdate(res, my_id, req.file.filename);
         res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
     }
-}
+  }
 }

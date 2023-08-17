@@ -32,6 +32,9 @@ module.exports = {
     userNotFound: (res) =>{
         res.status(400).json({ error: 'user not found' });
     },
+    cannotUpdateTask: (res) =>{
+        res.status(400).json({ error: 'cannotUpdateTask' });
+    },
     contentType: (res) => {
         res.status(400).json({ error: 'Content type is not correct' });
     },

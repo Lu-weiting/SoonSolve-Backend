@@ -220,5 +220,27 @@ module.exports = {
             console.log('connection release');
             connection.release();
         }
+    },
+    updateTask: async(res,requestBody,taskId,userId)=>{
+        const connection = await connectionPromise;
+        try {
+            const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
+            if(findTask.length == 0) return errorMsg.taskNotExist(res);
+            if (findTask[0].poster_id != userId) return errorMsg.cannotUpdateTask(res);
+            await connection.execute('UPDATE tasks SET ? WHERE id = ?', [requestBody, taskId]);
+            const data = {
+                data: {
+                    task: {
+                        id: taskId
+                    }
+                }
+            };
+            return data
+        } catch (error) {
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+            connection.release();
+        }
     }
 }

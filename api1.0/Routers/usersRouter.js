@@ -13,4 +13,5 @@ router.post('/signin', usersController.signIn);
 router.get('/:type/task_records', auth.verifyToken, usersController.getRecords);
 router.put('/picture', auth.verifyToken, tool.uploadPicture().single('picture'), usersController.pictureUpdate);
 router.get('/:id/profile', auth.verifyToken, usersController.getProfile);
+
 module.exports = router;
