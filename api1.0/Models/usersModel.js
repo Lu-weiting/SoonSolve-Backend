@@ -206,6 +206,24 @@ module.exports = {
       console.log('connection release');
       connection.release();
     }
+  },
+  profileUpdate: async (res, sex, userId) => {
+    const connection = await connectionPromise;
+    try {
+      await connection.execute('UPDATE users SET sex = ? WHERE id = ?', [sex, userId]);
+      const output = { id: userId };
+      const data = {
+        data: {
+          output
+        }
+      }
+      return data;
+    } catch (error) {
+      errorMsg.query(res);
+    } finally {
+      console.log('connection release');
+      connection.release();
+    }
   }
 
 
