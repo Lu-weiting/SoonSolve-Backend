@@ -97,7 +97,7 @@ module.exports = {
       const { sex } = req.body;
       const my_id = req.decodedToken.id;
       const result = await usersModel.profileUpdate(res,sex,my_id);
-      res.status(200).json(result);
+      return res.status(200).json(result);
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);

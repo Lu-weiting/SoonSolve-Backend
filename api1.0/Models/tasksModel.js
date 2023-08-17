@@ -111,7 +111,6 @@ module.exports = {
                     ['pending']);
                 let len = result.length;
                 console.log('test 2');
-                console.log(result);
                 if (result.length >= limit) len = result.length - 1;
 
                 if (result.length != 0) {

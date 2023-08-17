@@ -238,7 +238,6 @@ module.exports = {
       }
       return data;
     } catch (error) {
-      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {
