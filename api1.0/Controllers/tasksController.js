@@ -15,6 +15,20 @@ module.exports = {
           errorMsg.dbConnection(res);
       }
     },
+    deletetask: async (req, res) => {
+      try{
+        const taskId = Number(req.params.id);
+        const {userId} = req.decodedToken;
+        if(!isNaN(taskId)){
+          const result = await task.deletetask(res, taskId, userId);
+          res.status(200).json(result);
+        }else {
+          errorMsg.inputEmpty(res);
+        }
+      }catch (error) {
+          errorMsg.dbConnection(res);
+      }
+    },
     homeSearch: async (req, res) => {
         try{
             const {userId}=req.decodedToken;
