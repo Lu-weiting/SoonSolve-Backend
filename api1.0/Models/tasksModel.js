@@ -44,6 +44,7 @@ module.exports = {
             }
         } catch (error) {
             errorMsg.query(res);
+            console.log(error);
         } finally {
             console.log('connection release');
         }
