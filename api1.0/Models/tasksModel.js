@@ -154,7 +154,7 @@ module.exports = {
             if (sex != null) {
                 matched[3] = true;
                 finalParam.push(sex);
-                selected[3] = `T.sex = ?`;
+                selected[3] = `U.sex = ?`;
             }
             const trueIndexes = matched.map((value, index) => ({ value, index }))
                 .filter(item => item.value === true)
