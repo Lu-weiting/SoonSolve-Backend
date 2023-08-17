@@ -147,7 +147,20 @@ module.exports = {
   getProfile: async (res, targetId, my_id) => {
     const connection = await connectionPromise;
     try {
-      const [targetProfile] = await connection.execute('SELECT U.id AS uid,U.name AS name,U.picture AS picture,U.credit AS credit,C.id AS cid,C.content AS content,DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, C.poster_id AS poster_id FROM users AS U INNER JOIN comments AS C ON C.user_id = U.id WHERE id = ?', [targetId]);
+      const getProfileQuery = 
+      `
+        SELECT 
+          U.id AS uid,
+          U.name AS name,
+          U.picture AS picture,
+          U.credit AS credit,
+          C.id AS cid,C.content AS content,
+          DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, 
+          C.poster_id AS poster_id 
+        FROM users AS U INNER JOIN comments AS C 
+        ON C.user_id = U.id WHERE id = ?'
+      `
+      const [targetProfile] = await connection.execute(getProfileQuery, [targetId]);
       if (targetProfile.length == 0) return errorMsg.userNotFound(res);
       const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
       let friendship = null;
