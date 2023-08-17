@@ -91,22 +91,23 @@ module.exports = {
                 console.log('test 1');
                 const [result] = await connection.execute(
                     `
-                        SELECT 
-                            T.id AS id, 
-                            T.title, 
-                            T.content, 
-                            DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
-                            T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
-                            T.task_vacancy, T.approved_count, 
-                            T.location, T.reward, 
-                            T.status, T.poster_id, U.picture, 
-                            U.name, U.id AS user_id, 
-                            U.nickname, U.sex
-                        FROM tasks AS T LEFT JOIN users AS U
-                        ON T.poster_id = U.id 
-                        WHERE T.status = ?
-                        ORDER BY T.id DESC LIMIT ?
-                    `, ['pending', limit]);
+                    SELECT 
+                        T.id AS id, 
+                        T.title, 
+                        T.content, 
+                        DATE_FORMAT(T.created_at, "%Y-%m-%d %H:%i:%s") AS task_created_at, 
+                        T.deadline,DATE_FORMAT(T.closed_at, "%Y-%m-%d %H:%i:%s") AS task_closed_at, 
+                        T.task_vacancy, T.approved_count, 
+                        T.location, T.reward, 
+                        T.status, T.poster_id, U.picture, 
+                        U.name, U.id AS user_id, 
+                        U.nickname, U.sex
+                    FROM tasks AS T LEFT JOIN users AS U
+                    ON T.poster_id = U.id 
+                    WHERE T.status = ? 
+                    ORDER BY T.id DESC LIMIT ?
+                    `, 
+                    ['pending', limit]);
                 let len = result.length;
                 console.log('test 2');
                 console.log(result);
