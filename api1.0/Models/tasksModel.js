@@ -61,15 +61,15 @@ module.exports = {
             decodeCuser = await tool.decryptCursor(cursor);
         }
         try {
-            const my_friend_query_string = `SELECT F.senderId AS friend_id
+            const my_friend_query_string = `SELECT F.sender_id AS friend_id
                                                 FROM friendship AS F LEFT JOIN users AS U
-                                                ON F.senderId = U.id
-                                                WHERE status = ? AND receiverId = ?
+                                                ON F.sender_id = U.id
+                                                WHERE status = ? AND receiver_id = ?
                                                 UNION
-                                                SELECT F.receiverId AS friend_id
+                                                SELECT F.receiver_id AS friend_id
                                                 FROM friendship AS F LEFT JOIN users AS U
-                                                ON F.receiverId = U.id
-                                                WHERE status = ? AND senderId = ?`
+                                                ON F.receiver_id = U.id
+                                                WHERE status = ? AND sender_id = ?`
             let filter_query = `
                                     SELECT 
                                         T.id, 
@@ -88,6 +88,7 @@ module.exports = {
             finalParam.push('pending');
             const data = [];
             if (location == null && friend == null && title == null && sex == null) {
+                console.log('test 1');
                 const [result] = await connection.execute(
                     `
                         SELECT 
@@ -107,6 +108,7 @@ module.exports = {
                         ORDER BY T.id DESC LIMIT ?
                     `, ['pending', limit]);
                 let len = result.length;
+                console.log('test 2');
                 console.log(result);
                 if (result.length >= limit) len = result.length - 1;
 
