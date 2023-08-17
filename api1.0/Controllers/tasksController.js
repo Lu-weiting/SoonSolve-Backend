@@ -3,7 +3,7 @@ const errorMsg = require('../utils/error');
 module.exports = {
     createTask: async (req, res) => {
       try{
-        const {userId} = req.decodedToken;
+        const userId = req.decodedToken.id;
         const context = req.body;
         console.log(context);
         if(context){
@@ -14,6 +14,7 @@ module.exports = {
         }
       }catch (error) {
           errorMsg.dbConnection(res);
+          console.error(error);
       }
     },
     deletetask: async (req, res) => {
