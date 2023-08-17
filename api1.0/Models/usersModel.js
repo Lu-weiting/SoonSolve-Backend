@@ -86,7 +86,6 @@ module.exports = {
           t.content,
           t.location,
           t.reward,
-          t.picture,
           u.name,
           u.nickname,
           u.picture 
