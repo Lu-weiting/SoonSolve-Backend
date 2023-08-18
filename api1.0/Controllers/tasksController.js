@@ -82,10 +82,9 @@ module.exports = {
       try{
         const status = req.params.status;
         const taskId = Number(req.params.task_id);
-        const my_id = req.decodedToken.id;
         if(!status) return errorMsg.inputEmpty(res);
         if(status !== 'pending' && status !== 'processing' && status !== 'commenting' && status !== 'finished') return errorMsg.wronginput(res);
-        const result = await tasksModel.updateTaskstatus(res, status, taskId, my_id);
+        const result = await tasksModel.updateTaskstatus(res, status, taskId);
         res.status(200).json(result);
       }
       catch(error){
