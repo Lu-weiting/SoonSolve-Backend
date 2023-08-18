@@ -11,46 +11,62 @@ moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
   signUp: async (name, email, password, res) => {
-    const connection = await connectionPromise;
-    // 檢查是否已經有相同的 email 註冊過
-    const userQuery = 'SELECT email FROM users WHERE email = ?';
-    const [rows] = await connection.execute(userQuery, [email]);
-    if (rows.length != 0) {
-      return errorMsg.duplicateEmail(res);
-    }
-    // 使用 crypto 加密密碼
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-
-    // 執行註冊的 SQL 
-    const signupQuery = 'INSERT INTO users(name, email, password, picture) VALUES(?,?,?,?)';
-    const [results] = await connection.execute(signupQuery, [name, email, hashedPassword, null]);
-
-    const id = results.insertId;
-
-    // 創建包含註冊資訊和 JWT 的回應
-    const response = {
-      'data': {
-        'access_token': auth.generateJWTToken(id),
-        "user": {
-          "id": id,
-          "name": name,
-          "email": email,
-          "picture": null
-        }
+    try{
+      const connection = await connectionPromise;
+      // 檢查是否已經有相同的 email 註冊過
+      const userQuery = 'SELECT email FROM users WHERE email = ?';
+      const [rows] = await connection.execute(userQuery, [email]);
+      if (rows.length != 0) {
+        return errorMsg.duplicateEmail(res);
       }
-    };
-    return response;
+      // 使用 crypto 加密密碼
+      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+      // 執行註冊的 SQL 
+      const signupQuery = 'INSERT INTO users(name, email, password, picture) VALUES(?,?,?,?)';
+      const [results] = await connection.execute(signupQuery, [name, email, hashedPassword, null]);
+
+      const id = results.insertId;
+
+      // 創建包含註冊資訊和 JWT 的回應
+      const response = {
+        'data': {
+          'access_token': auth.generateJWTToken(id),
+          "user": {
+            "id": id,
+            "name": name,
+            "email": email,
+            "picture": null
+          }
+        }
+      };
+      return response;
+    }
+    catch (error) {
+      errorMsg.query(res);
+    } 
+    finally {
+      console.log('connection release');
+    }
   },
   signIn: async (email, res) => {
-    const connection = await connectionPromise;
-    // 查詢使用者是否存在
-    const signinQuery = 'SELECT * FROM users WHERE email = ?';
-    const [is_exist] = await connection.execute(signinQuery, [email]);
-    if (is_exist.length === 0) {
-      return errorMsg.noUser(res);
+    try{
+      const connection = await connectionPromise;
+      // 查詢使用者是否存在
+      const signinQuery = 'SELECT * FROM users WHERE email = ?';
+      const [is_exist] = await connection.execute(signinQuery, [email]);
+      if (is_exist.length === 0) {
+        return errorMsg.noUser(res);
+      }
+      const user = is_exist[0];
+      return user;
     }
-    const user = is_exist[0];
-    return user;
+    catch (error) {
+      errorMsg.query(res);
+    } 
+    finally {
+      console.log('connection release');
+    }
   },
   tasksRecord: async (res, my_id, type, cursor, limit) => {
     const connection = await connectionPromise;
@@ -59,7 +75,8 @@ module.exports = {
     try {
       if (cursor == null) {
         decodeCuser = Math.pow(2, 64);
-      } else {
+      } 
+      else {
         decodeCuser = await tool.decryptCursor(cursor);
       }
 
@@ -72,7 +89,8 @@ module.exports = {
         WHERE t.poster_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ${limit}
         `;
-      } else if (type == 'Accepted') {
+      } 
+      else if (type == 'Accepted') {
         query = 
         `
         SELECT ut.status,
@@ -99,9 +117,11 @@ module.exports = {
       const [results] = await connection.execute(query, [my_id, decodeCuser]);
       if (results.length == 0) {
         return errorMsg.taskNotExist(res);
-      } else if (results.length < limit) {
+      } 
+      else if (results.length < limit) {
         nextCursor = null;
-      } else {
+      } 
+      else {
         const lastPostId = results[results.length - 1].id;
         nextCursor = await tool.encryptCursor(lastPostId);
         nextCursor = encodeURIComponent(nextCursor);
@@ -128,23 +148,19 @@ module.exports = {
         };
         return content;
       });
-      try {
-        const tasksResult = await Promise.all(promises);
-        const response = {
-          data: {
-            task: tasksResult,
-            next_cursor: nextCursor
-          }
-        };
-        return response;
-      } catch (error) {
-        console.error(error);
-        throw new Error('Server error');
-      }
-    } catch (error) {
+      const tasksResult = await Promise.all(promises);
+      const response = {
+        data: {
+          task: tasksResult,
+          next_cursor: nextCursor
+        }
+      };
+      return response;
+    } 
+    catch (error) {
       errorMsg.query(res);
-      console.error(error);
-    } finally {
+    } 
+    finally {
       console.log('connection release');
     }
   },
@@ -175,8 +191,8 @@ module.exports = {
       if (targetProfile.length === 0) {
         return errorMsg.userNotFound(res);
       }
-      
-      const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
+      const friendshipQuery = 'SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)';
+      const [findFriendshipResult] = await connection.execute(friendshipQuery, [targetId, my_id, my_id, targetId]);
       let friendship = null;
       if (findFriendshipResult.length > 0) {
         friendship = {
@@ -207,14 +223,15 @@ module.exports = {
         }
       };
       return data;
-    } catch (error) {
+    } 
+    catch (error) {
       errorMsg.query(res);
-      console.error(error);
-    } finally {
+    } 
+    finally {
       console.log('connection release');
     }
   },
-  
+
   pictureUpdate: async (res, my_id, filename) => {
     const connection = await connectionPromise;
     try {
@@ -231,10 +248,11 @@ module.exports = {
       }
       return data;
 
-    } catch (error) {
-      console.log(error);
+    } 
+    catch (error) {
       errorMsg.query(res);
-    } finally {
+    } 
+    finally {
       console.log('connection release');
     }
   },
@@ -249,13 +267,12 @@ module.exports = {
         }
       }
       return data;
-    } catch (error) {
+    } 
+    catch (error) {
       errorMsg.query(res);
-      console.error(error);
-    } finally {
+    } 
+    finally {
       console.log('connection release');
     }
   }
-
-
 }
