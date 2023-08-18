@@ -17,7 +17,7 @@ module.exports = {
     updateTaskReq: async (req,res)=>{
       try {
         const status = req.params.status;
-        const user_taskId = Number(req.body.id);
+        const user_taskId = Number(req.params.user_task_id);
         if (status != 'Accepted' && type != 'Finished') return errorMsg.inputEmpty(res);
         const result = await tasksReqModel.updateTaskReq(res, status, user_taskId);
         res.status(200).json(result);
