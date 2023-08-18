@@ -153,22 +153,29 @@ module.exports = {
     try {
       const getProfileQuery = 
       `
-        SELECT 
-          U.id AS uid,
-          U.name AS name,
-          U.picture AS picture,
-          U.credit AS credit,
-          C.id AS cid,C.content AS content,
-          DATE_FORMAT(C.created_at, "%Y-%m-%d %H:%i:%s") AS created_at, 
-          C.poster_id AS poster_id 
-        FROM users AS U LEFT JOIN comments AS C 
-        ON C.user_id = U.id WHERE U.id = ?
+      SELECT
+        u.id AS user_id,
+        u.name AS user_name,
+        u.picture AS user_picture,
+        u.credit AS user_credit,
+        c.id AS comment_id,
+        c.content AS comment_content,
+        c.created_at AS comment_created_at,
+        p.id AS poster_id,
+        p.name AS poster_name,
+        p.picture AS poster_picture
+      FROM users u
+      LEFT JOIN comments c ON u.id = c.user_id
+      LEFT JOIN users p ON c.poster_id = p.id
+      WHERE u.id = ?;
+  
       `
       const [targetProfile] = await connection.execute(getProfileQuery, [targetId]);
-      console.log(my_id);
-      console.log(targetId);
-      console.log(targetProfile);
-      if (targetProfile.length == 0) return errorMsg.userNotFound(res);
+
+      if (targetProfile.length === 0) {
+        return errorMsg.userNotFound(res);
+      }
+      
       const [findFriendshipResult] = await connection.execute('SELECT * FROM friendship WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?)', [targetId, my_id, my_id, targetId]);
       let friendship = null;
       if (findFriendshipResult.length > 0) {
@@ -177,22 +184,18 @@ module.exports = {
           status: findFriendshipResult[0].status
         }
       }
-      const comments = [];
-      for (let i = 0; i < targetProfile.length; i++) {
-        const query = 'SELECT U.id , U.name ,U.picture FROM users AS U INNER JOIN comments AS C ON U.id = C.poster_id WHERE C.id = ?';
-        const commentResult=await connection.execute(query,[targetProfile[i].cid]);
-        const comment = {
-          id: targetProfile[i].cid,
-          content: targetProfile[i].content,
-          created_at: moment.utc(targetProfile[i].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
-          poster:{
-            id: commentResult[0].id,
-            name: commentResult[0].name,
-            picture: commentResult[0].picture
-          }
+
+      const comments = targetProfile.map(row => ({
+        id: row.comment_id,
+        content: row.comment_content,
+        created_at: moment.utc(row.comment_created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+        poster: {
+          id: row.poster_id,
+          name: row.poster_name,
+          picture: row.poster_picture
         }
-        comments.push(comment);
-      }
+      }));
+
       const data = {
         user: {
           id: targetProfile[0].uid,
@@ -205,13 +208,13 @@ module.exports = {
       };
       return data;
     } catch (error) {
-      console.log(error);
       errorMsg.query(res);
       console.error(error);
     } finally {
       console.log('connection release');
     }
   },
+  
   pictureUpdate: async (res, my_id, filename) => {
     const connection = await connectionPromise;
     try {
