@@ -11,6 +11,9 @@ module.exports = {
     taskNotExist: (res) => {
         res.status(400).json({ error: 'Client error - Post is not exist' });
     },
+    taskReqNotExist: (res) => {
+        res.status(400).json({ error: 'Client error - Task Request is not exist' });
+    },
     noToken: (res) => {
         res.status(401).json({ error: 'Client error - No token provided' });
     },

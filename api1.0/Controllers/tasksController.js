@@ -20,7 +20,7 @@ module.exports = {
     deletetask: async (req, res) => {
       try{
         const taskId = Number(req.params.id);
-        const userId = req.decodedToken.id;
+        const {userId} = req.decodedToken;
         if(!isNaN(taskId)){
           const result = await tasksModel.deletetask(res, taskId, userId);
           res.status(200).json(result);
@@ -50,7 +50,7 @@ module.exports = {
           if (!taskId) return errorMsg.inputEmpty(res);
     
           const result = await tasksModel.tasksDetail(res, taskId);
-          return res.status(200).json(result);
+          res.status(200).json(result);
         } catch (error) {
           console.error(error);
           errorMsg.dbConnection(res);
