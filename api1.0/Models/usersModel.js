@@ -179,11 +179,17 @@ module.exports = {
       }
       const comments = [];
       for (let i = 0; i < targetProfile.length; i++) {
+        const query = 'SELECT U.id , U.name ,U.picture FROM users AS U INNER JOIN comments AS C ON U.id = C.poster_id WHERE C.id = ?';
+        const commentResult=await connection.execute(query,[targetProfile[i].cid]);
         const comment = {
           id: targetProfile[i].cid,
           content: targetProfile[i].content,
           created_at: moment.utc(targetProfile[i].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
-          poster_id: targetProfile[i].poster_id
+          poster:{
+            id: commentResult[0].id,
+            name: commentResult[0].name,
+            picture: commentResult[0].picture
+          }
         }
         comments.push(comment);
       }

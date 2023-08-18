@@ -4,9 +4,8 @@ const errorMsg = require('../utils/error');
 module.exports = {
     createTask: async (req, res) => {
       try{
-        const userId = req.decodedToken.id;
+        const {userId} = req.decodedToken;
         const context = req.body;
-        console.log(context);
         if(context){
           const result = await tasksModel.createTask(res, userId, context);
           res.status(200).json(result);
