@@ -21,7 +21,6 @@ module.exports = {
             };
             return response;
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -44,7 +43,6 @@ module.exports = {
             }
         } catch (error) {
             errorMsg.query(res);
-            console.log(error);
         } finally {
             console.log('connection release');
         }
@@ -230,7 +228,6 @@ module.exports = {
             };
             return output2;
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -271,7 +268,6 @@ module.exports = {
             };
             return response;
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -307,7 +303,6 @@ module.exports = {
             };
             return data
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
@@ -316,13 +311,7 @@ module.exports = {
     updateTaskstatus: async(res,status,taskId)=>{
         const connection = await connectionPromise;
         try {
-            const updateQuery = 
-            `
-            UPDATE tasks 
-            SET
-                status = ?,
-            WHERE id = ?
-            `;
+            const updateQuery = 'UPDATE tasks SET status = ? WHERE id = ?';
             const task = await connection.execute(updateQuery, [status, taskId]);
             console.log(task);
             const data = {
@@ -334,7 +323,6 @@ module.exports = {
             };
             return data
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
