@@ -178,7 +178,7 @@ module.exports = {
         }
       }
       const comments = [];
-      for (var i = 0; i < targetProfile.length; i++) {
+      for (let i = 0; i < targetProfile.length; i++) {
         const comment = {
           id: targetProfile[i].cid,
           content: targetProfile[i].content,
