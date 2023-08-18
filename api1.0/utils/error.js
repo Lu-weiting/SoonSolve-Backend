@@ -26,11 +26,11 @@ module.exports = {
     wrongToken: (res) => {
         res.status(403).json({ error: 'Client error - Invalid token' });
     },
-    dbConnection: (res) => {
-        res.status(500).json({ error: 'Server error - connecting to db failed' });
+    controllerProblem: (res) => {
+        res.status(500).json({ error: 'Server error - Controller problem' });
     },
     queryFailed: (res) => {
-        res.status(500).json({ error: 'Server error - query failed' });
+        res.status(500).json({ error: 'Server error - Query failed' });
     },
     userNotFound: (res) =>{
         res.status(400).json({ error: 'user not found' });

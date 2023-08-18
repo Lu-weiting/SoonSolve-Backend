@@ -313,12 +313,11 @@ module.exports = {
             console.log('connection release');
         }
     },
-    updateTaskstatus: async(res,status,taskId,userId)=>{
+    updateTaskstatus: async(res,status,taskId)=>{
         const connection = await connectionPromise;
         try {
             const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
             if(findTask.length == 0) return errorMsg.taskNotExist(res);
-            if (findTask[0].poster_id != userId) return errorMsg.cannotUpdateTask(res);
             const updateQuery = 
             `
             UPDATE tasks 

@@ -7,19 +7,25 @@ const errorMsg = require('../utils/error');
 
 module.exports = {
   signUp: async (req, res) => {
-    const { name, email, password } = req.body;
+    try{
+      const { name, email, password } = req.body;
 
-    // 檢查必填欄位是否都有輸入
-    if (!name || !password || !email) {
-      return errorMsg.inputEmpty(res);
-    }
+      // 檢查必填欄位是否都有輸入
+      if (!name || !password || !email) {
+        return errorMsg.inputEmpty(res);
+      }
 
-    // 檢查 email 格式是否正確
-    if (!tool.checkEmailRegex(email)) {
-      return errorMsg.wrongEmail(res);
+      // 檢查 email 格式是否正確
+      if (!tool.checkEmailRegex(email)) {
+        return errorMsg.wrongEmail(res);
+      }
+      const response = await usersModel.signUp(name, email, password, res);
+      return res.json(response);
     }
-    const response = await usersModel.signUp(name, email, password, res);
-    return res.json(response);
+    catch(error){
+      errorMsg.controllerProblem(res);
+      console.error(error);
+    }
   },
   signIn: async (req, res) => {
     const email = req.body.email;
@@ -32,23 +38,29 @@ module.exports = {
 
     const user = await usersModel.signIn(email, res);
 
-    // 驗證密碼是否正確
-    const PASSWORD = user.password;
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-    if (PASSWORD !== hashedPassword) {
-      return errorMsg.wrongPassword(res);
-    }
-
-    // 回傳登入成功的回應，包含 JWT 和使用者資訊
-    const response = {
-      'data': {
-        'access_token': auth.generateJWTToken(user.id),
-        "user": {
-          'id': user.id
-        }
+    try{
+      // 驗證密碼是否正確
+      const PASSWORD = user.password;
+      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+      if (PASSWORD !== hashedPassword) {
+        return errorMsg.wrongPassword(res);
       }
-    };
-    res.json(response);
+
+      // 回傳登入成功的回應，包含 JWT 和使用者資訊
+      const response = {
+        'data': {
+          'access_token': auth.generateJWTToken(user.id),
+          "user": {
+            'id': user.id
+          }
+        }
+      };
+      res.json(response);
+    }
+    catch(error){
+      errorMsg.controllerProblem(res);
+      console.error(error);
+    }
   },
   getRecords: async (req, res) => {
     try {
@@ -60,9 +72,10 @@ module.exports = {
       if (type != 'Released' && type != 'Accepted') return errorMsg.inputEmpty(res);
       const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor : null, limit);
       res.status(200).json(result);
-    } catch (error) {
+    } 
+    catch (error) {
+      errorMsg.controllerProblem(res);
       console.error(error);
-      errorMsg.dbConnection(res);
     }
   },
   getProfile: async (req, res) => {
@@ -72,9 +85,10 @@ module.exports = {
       if (!targetId) return errorMsg.inputEmpty(res);
       const result = await usersModel.getProfile(res, targetId, my_id);
       return res.status(200).json(result);
-    } catch (error) {
+    } 
+    catch (error) {
+      errorMsg.controllerProblem(res);
       console.error(error);
-      errorMsg.dbConnection(res);
     }
   },
   pictureUpdate: async (req, res) => {
@@ -88,9 +102,10 @@ module.exports = {
       console.log(__dirname);
       const result = await usersModel.pictureUpdate(res, my_id, req.file.filename);
       res.status(200).json(result);
-    } catch (error) {
+    } 
+    catch (error) {
+      errorMsg.controllerProblem(res);
       console.error(error);
-      errorMsg.dbConnection(res);
     }
   },
   profileUpdate: async (req, res) => {
@@ -100,9 +115,10 @@ module.exports = {
       const my_id = req.decodedToken.id;
       const result = await usersModel.profileUpdate(res,sex,my_id);
       return res.status(200).json(result);
-    } catch (error) {
+    } 
+    catch (error) {
+      errorMsg.controllerProblem(res);
       console.error(error);
-      errorMsg.dbConnection(res);
     }
   },
   createComment: async(req,res)=>{

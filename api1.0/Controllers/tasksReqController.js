@@ -10,9 +10,10 @@ module.exports = {
             if(!ask_count) return errorMsg.inputEmpty(res);
             const result = await tasksReqModel.sendRequest(res,ask_count,taskId,userId);
             res.status(200).json(result);
-        }catch (error) {
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
             console.error(error);
-            errorMsg.dbConnection(res);
         }
     },
     deleteRequest: async(req,res)=>{
@@ -21,9 +22,10 @@ module.exports = {
             if(!user_taskId) return errorMsg.inputEmpty(res);
             const result = await tasksReqModel.deleteRequest(res,user_taskId);
             res.status(200).json(result);
-        }catch (error) {
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
             console.error(error);
-            errorMsg.dbConnection(res);
         }
     }
 

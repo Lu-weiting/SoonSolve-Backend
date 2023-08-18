@@ -12,8 +12,9 @@ module.exports = {
         }else {
           errorMsg.inputEmpty(res);
         }
-      }catch (error) {
-          errorMsg.dbConnection(res);
+      }
+      catch (error) {
+          errorMsg.controllerProblem(res);
           console.error(error);
       }
     },
@@ -24,11 +25,14 @@ module.exports = {
         if(!isNaN(taskId)){
           const result = await tasksModel.deletetask(res, taskId, userId);
           res.status(200).json(result);
-        }else {
+        }
+        else {
           errorMsg.inputEmpty(res);
         }
-      }catch (error) {
-          errorMsg.dbConnection(res);
+      }
+      catch (error) {
+          errorMsg.controllerProblem(res);
+          console.error(error);
       }
     },
     homeSearch: async (req, res) => {
@@ -40,8 +44,10 @@ module.exports = {
           
           const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,sex ? Number(sex) : null,my_id);
           res.status(200).json(result);
-        }catch (error) {
-            errorMsg.dbConnection(res);
+        }
+        catch (error) {
+          errorMsg.controllerProblem(res);
+          console.error(error);
         }
     },
     tasksDetail: async (req, res) => {
@@ -51,9 +57,10 @@ module.exports = {
     
           const result = await tasksModel.tasksDetail(res, taskId);
           return res.status(200).json(result);
-        } catch (error) {
+        } 
+        catch (error) {
+          errorMsg.controllerProblem(res);
           console.error(error);
-          errorMsg.dbConnection(res);
         }
     },
     updateTask: async (req,res)=>{
@@ -65,24 +72,24 @@ module.exports = {
         if (!taskId) return errorMsg.inputEmpty(res);
         const result = await tasksModel.updateTask(res,requestBody,taskId,my_id);
         res.status(200).json(result);
-      } catch (error) {
+      } 
+      catch (error) {
+        errorMsg.controllerProblem(res);
         console.error(error);
-        errorMsg.dbConnection(res);
       }
     },
     updateTaskstatus: async (req, res) => {
       try{
         const status = req.params.status;
         const taskId = Number(req.params.task_id);
-        const my_id = req.decodedToken.id;
         if(!status) return errorMsg.inputEmpty(res);
         if(status !== 'pending' && status !== 'processing' && status !== 'commenting' && status !== 'finished') return errorMsg.wronginput(res);
-        const result = await tasksModel.updateTaskstatus(res, status, taskId, my_id);
+        const result = await tasksModel.updateTaskstatus(res, status, taskId);
         res.status(200).json(result);
       }
       catch(error){
+        errorMsg.controllerProblem(res);
         console.error(error);
-        errorMsg.dbConnection(res);
       }
     }
 }
