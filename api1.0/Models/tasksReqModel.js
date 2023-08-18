@@ -61,11 +61,27 @@ module.exports = {
                 throw new Error('Server error');
               }
         } catch (error) {
-            console.log(error);
             errorMsg.query(res);
         } finally {
             console.log('connection release');
             connection.release();
         }
-    }
+    },
+    updateTaskReq: async (res, status, user_taskId) => {
+        const connection = await connectionPromise;
+        try {
+          await connection.execute('UPDATE user_task SET status = ? WHERE id = ?', [status, user_taskId]);
+          const output = { user_task: user_taskId };
+          const data = {
+            data: {
+              output
+            }
+          }
+          return data;
+        } catch (error) {
+          errorMsg.query(res);
+        } finally {
+          console.log('connection release');
+        }
+      }
 }

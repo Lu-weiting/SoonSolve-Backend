@@ -14,4 +14,16 @@ module.exports = {
           errorMsg.dbConnection(res);
         }
     },
+    updateTaskReq: async (req,res)=>{
+      try {
+        const status = req.params.status;
+        const user_taskId = Number(req.body.id);
+        if (status != 'Accepted' && type != 'Finished') return errorMsg.inputEmpty(res);
+        const result = await tasksReqModel.updateTaskReq(res, status, user_taskId);
+        res.status(200).json(result);
+      } catch (error) {
+        console.error(error);
+        errorMsg.dbConnection(res);
+      }
+    }
 }
