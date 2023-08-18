@@ -95,6 +95,7 @@ module.exports = {
             return response;
         } catch (error) {
             errorMsg.query(res);
+            console.error(error);
         } finally {
             console.log('connection release');
         }
