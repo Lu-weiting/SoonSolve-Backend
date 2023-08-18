@@ -11,8 +11,10 @@ app.use(express.json()); // 使用內建的 express.json 中間件，解析請�
 
 const usersRouter = require('./Routers/usersRouter')
 const tasksRouter = require('./Routers/tasksRouter');
+const tasksReqRouter = require('./Routers/tasksReqRouter');
 
 app.use('/api/1.0/users', usersRouter);
+app.use('/api/1.0/tasksReqRouter', tasksReqRouter);
 app.use('/api/1.0/tasks', tasksRouter);
 app.get('/api/1.0/', (req, res) => {
   res.status(200).send('connected')

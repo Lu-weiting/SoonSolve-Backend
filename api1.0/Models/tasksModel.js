@@ -105,7 +105,7 @@ module.exports = {
                         U.nickname, U.sex
                     FROM tasks AS T LEFT JOIN users AS U
                     ON T.poster_id = U.id 
-                    WHERE T.status = ? 
+                    WHERE T.status = ? AND T.id < ${decodeCuser}
                     ORDER BY T.id DESC LIMIT ${limit}
                     `, 
                     ['pending']);
