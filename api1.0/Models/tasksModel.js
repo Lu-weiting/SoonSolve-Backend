@@ -287,20 +287,17 @@ module.exports = {
             `
             UPDATE tasks 
             SET
-                id = ?,
                 title = ?,
                 content = ?,
                 deadline = ?,
                 task_vacancy = ?,
                 approved_count = ?,
                 location = ?,
-                reward = ?,
-                status = ?,
-                poster_id = ?
+                reward = ?
             WHERE id = ?
             `;
-            const {id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id,} = requestBody
-            await connection.execute(updateQuery, [id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id, taskId]);
+            const {title, content, deadline, task_vacancy, approved_count, location, reward} = requestBody
+            await connection.execute(updateQuery, [title, content, deadline, task_vacancy, approved_count, location, reward, taskId]);
             const data = {
                 data: {
                     task: {
@@ -316,7 +313,7 @@ module.exports = {
             console.log('connection release');
         }
     },
-    updateTaskstatus: async(res,status,userId)=>{
+    updateTaskstatus: async(res,status,taskId,userId)=>{
         const connection = await connectionPromise;
         try {
             const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
@@ -326,20 +323,10 @@ module.exports = {
             `
             UPDATE tasks 
             SET
-                id = ?,
-                title = ?,
-                content = ?,
-                deadline = ?,
-                task_vacancy = ?,
-                approved_count = ?,
-                location = ?,
-                reward = ?,
                 status = ?,
-                poster_id = ?
             WHERE id = ?
             `;
-            const {id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id,} = requestBody
-            await connection.execute(updateQuery, [id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id, taskId]);
+            await connection.execute(updateQuery, [status, taskId]);
             const data = {
                 data: {
                     task: {
