@@ -23,5 +23,25 @@ module.exports = {
         } finally {
             console.log('connection release');
         }
+    },
+    deleteRequest: async(res,user_taskId)=>{
+        const connection = await connectionPromise;
+        try {
+            await connection.execute('DELETE FROM user_task WHERE id = ?',[user_taskId]);
+            const data = {
+                data:
+                {
+                    user_task:{
+                        id: user_taskId
+                    }
+                }
+            };
+            return data;
+        } catch (error) {
+            console.log(error);
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+        }
     }
 }
