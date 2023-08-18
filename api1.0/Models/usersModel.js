@@ -255,7 +255,8 @@ module.exports = {
     } finally {
       console.log('connection release');
     }
-  }
+  },
+  
 
 
 }

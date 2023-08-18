@@ -104,5 +104,13 @@ module.exports = {
       console.error(error);
       errorMsg.dbConnection(res);
     }
+  },
+  createComment: async(req,res)=>{
+    try {
+      
+    } catch (error) {
+      console.error(error);
+      errorMsg.dbConnection(res);
+    }
   }
 }
