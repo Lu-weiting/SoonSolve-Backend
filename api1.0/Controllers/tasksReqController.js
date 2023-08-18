@@ -5,7 +5,10 @@ module.exports = {
         try{
             const userId = req.decodedToken.id;
             const taskId = Number(req.params.task_id);
-            const result = await tasksReqModel.sendRequest(res,taskId,userId);
+            const {ask_count} = req.body;
+            if(!taskId) return errorMsg.inputEmpty(res);
+            if(!ask_count) return errorMsg.inputEmpty(res);
+            const result = await tasksReqModel.sendRequest(res,ask_count,taskId,userId);
             res.status(200).json(result);
         }catch (error) {
             errorMsg.dbConnection(res);
