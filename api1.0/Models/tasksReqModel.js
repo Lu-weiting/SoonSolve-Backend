@@ -55,8 +55,8 @@ module.exports = {
                 decodeCuser = await tool.decryptCursor(cursor);
               }
             const query = `SELECT ut.id, ut.ask_count, ut.status, u.id AS user_id , u.name, u.picture 
-            FROM tasks t
-            LEFT JOIN user_task ut ON t.id = ut.task_id
+            FROM user_task ut 
+            LEFT JOIN tasks t ON t.id = ut.task_id
             LEFT JOIN users u ON ut.taker_id = u.id
             WHERE t.poster_id = ?
             ORDER BY t.id DESC LIMIT ${limit}
