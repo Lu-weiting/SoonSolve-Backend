@@ -9,7 +9,7 @@ module.exports = {
         res.status(400).json({ error: 'Client error - It should not be possible to register with a duplicate email.' })
     },
     taskNotExist: (res) => {
-        res.status(400).json({ error: 'Client error - Post is not exist' });
+        res.status(400).json({ error: 'Client error - Task is not exist' });
     },
     wronginput: (res) => {
         res.status(400).json({ error: 'Input must be pending / processing / commenting / finished' });

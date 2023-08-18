@@ -316,8 +316,6 @@ module.exports = {
     updateTaskstatus: async(res,status,taskId)=>{
         const connection = await connectionPromise;
         try {
-            const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
-            if(findTask.length == 0) return errorMsg.taskNotExist(res);
             const updateQuery = 
             `
             UPDATE tasks 
@@ -325,7 +323,8 @@ module.exports = {
                 status = ?,
             WHERE id = ?
             `;
-            await connection.execute(updateQuery, [status, taskId]);
+            const task = await connection.execute(updateQuery, [status, taskId]);
+            console.log(task);
             const data = {
                 data: {
                     task: {
