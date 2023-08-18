@@ -11,6 +11,9 @@ module.exports = {
     taskNotExist: (res) => {
         res.status(400).json({ error: 'Client error - Task is not exist' });
     },
+    taskReqNotExist: (res) => {
+        res.status(400).json({ error: 'Client error - Task request is not exist' });
+    },
     wronginput: (res) => {
         res.status(400).json({ error: 'Input must be pending / processing / commenting / finished' });
     },

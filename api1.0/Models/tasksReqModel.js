@@ -64,7 +64,7 @@ module.exports = {
 
             const [results] = await connection.execute(query, [userId]);
             if (results.length == 0) {
-                return error_message.taskReqNotExist(res);
+                return errorMsg.taskReqNotExist(res);
               } else if (results.length < limit) {
                 nextCursor = null;
               } else {
