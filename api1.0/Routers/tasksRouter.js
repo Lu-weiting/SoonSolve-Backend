@@ -19,6 +19,6 @@ router.put('/:task_id',auth.verifyToken,tasksController.updateTask);
 // User get tasks details API
 router.get('/:id', auth.verifyToken, tasksController.tasksDetail);
 
-router.put('/:status/:id',auth.verifyToken,tasksController.updateTaskstatus);
+router.put('/:status/:id',tasksController.updateTaskstatus);
 
 module.exports = router;
