@@ -81,7 +81,7 @@ module.exports = {
     updateTaskstatus: async (req, res) => {
       try{
         const status = req.params.status;
-        const taskId = Number(req.params.task_id);
+        const taskId = Number(req.params.id);
         if(!status) return errorMsg.inputEmpty(res);
         if(status !== 'pending' && status !== 'processing' && status !== 'commenting' && status !== 'finished') return errorMsg.wronginput(res);
         const result = await tasksModel.updateTaskstatus(res, status, taskId);

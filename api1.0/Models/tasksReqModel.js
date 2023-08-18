@@ -27,8 +27,9 @@ module.exports = {
     deleteRequest: async(res,user_taskId)=>{
         const connection = await connectionPromise;
         try {
-            
-            await connection.execute('DELETE FROM user_task WHERE id = ?',[user_taskId]);
+            const deleted = await connection.execute('DELETE FROM user_task WHERE id = ?',[user_taskId]);
+            console.log(deleted);
+            if(deleted.changedRows === 0) return errorMsg.taskNotExist(res);
             const data = {
                 data:
                 {
