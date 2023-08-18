@@ -229,6 +229,7 @@ module.exports = {
             return output2;
         } catch (error) {
             errorMsg.query(res);
+            console.error(error);
         } finally {
             console.log('connection release');
         }
