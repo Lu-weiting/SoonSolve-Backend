@@ -16,6 +16,7 @@ const tasksReqRouter = require('./Routers/tasksReqRouter');
 app.use('/api/1.0/users', usersRouter);
 app.use('/api/1.0/tasksReqRouter', tasksReqRouter);
 app.use('/api/1.0/tasks', tasksRouter);
+app.use('/api/1.0/task_req', tasksReqRouter);
 app.get('/api/1.0/', (req, res) => {
   res.status(200).send('connected')
 })

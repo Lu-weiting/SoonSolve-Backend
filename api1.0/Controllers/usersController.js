@@ -66,7 +66,7 @@ module.exports = {
     try {
       const my_id = req.decodedToken.id;
       const type = req.params.type;
-      const cursor = req.query.cursor
+      const cursor = req.query.cursor;
       console.log(type);
       let limit = 10;
       if (type != 'Released' && type != 'Accepted') return errorMsg.inputEmpty(res);
