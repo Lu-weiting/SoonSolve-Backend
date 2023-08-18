@@ -120,5 +120,18 @@ module.exports = {
       errorMsg.controllerProblem(res);
       console.error(error);
     }
+  },
+  createComment: async(req,res)=>{
+    try {
+      const my_id = req.decodedToken.id;
+      const task_poster_id = Number(req.params.task_poster_id);
+      const {content} = req.body;
+      if(!task_poster_id||!content) return errorMsg.inputEmpty(res);
+      const result = await usersModel.createComment(res,content,task_poster_id,my_id);
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      errorMsg.controllerProblem(res);
+    }
   }
 }

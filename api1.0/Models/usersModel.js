@@ -274,5 +274,32 @@ module.exports = {
     finally {
       console.log('connection release');
     }
+  },
+  createComment: async(res,content,task_poster_id,userId)=>{
+    const connection = await connectionPromise;
+    try {
+      const [insertResult]=await connection.execute('INSERT INTO comments (content,user_id,poster_id) VALUES (?,?,?)', [content,task_poster_id, userId]);
+
+      const data = {
+        data: {
+          user: {
+            id: userId
+          },
+          comment: {
+            id: insertResult.insertId
+          }
+        }
+      };
+      return data;
+    } 
+    catch (error) {
+      errorMsg.query(res);
+    } 
+    finally {
+      console.log('connection release');
+    }
   }
+  
+
+
 }
