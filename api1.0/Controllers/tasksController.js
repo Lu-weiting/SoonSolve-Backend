@@ -1,4 +1,5 @@
 const tasksModel = require('../Models/tasksModel');
+const error = require('../utils/error');
 const errorMsg = require('../utils/error');
 module.exports = {
     createTask: async (req, res) => {
@@ -66,6 +67,21 @@ module.exports = {
         const result = await tasksModel.updateTask(res,requestBody,taskId,my_id);
         res.status(200).json(result);
       } catch (error) {
+        console.error(error);
+        errorMsg.dbConnection(res);
+      }
+    },
+    updateTaskstatus: async (req, res) => {
+      try{
+        const status = req.params.status;
+        const taskId = Number(req.params.task_id);
+        const my_id = req.decodedToken.id;
+        if(!status) return errorMsg.inputEmpty(res);
+        if(status !== 'pending' && status !== 'processing' && status !== 'commenting' && status !== 'finished') return errorMsg.wronginput(res);
+        const result = await tasksModel.updateTaskstatus(res, status, taskId, my_id);
+        res.status(200).json(result);
+      }
+      catch(error){
         console.error(error);
         errorMsg.dbConnection(res);
       }

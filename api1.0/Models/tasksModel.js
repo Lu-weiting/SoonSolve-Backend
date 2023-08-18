@@ -315,5 +315,44 @@ module.exports = {
         } finally {
             console.log('connection release');
         }
+    },
+    updateTaskstatus: async(res,status,userId)=>{
+        const connection = await connectionPromise;
+        try {
+            const [findTask] = await connection.execute('SELECT * FROM tasks WHERE id = ?', [taskId]);
+            if(findTask.length == 0) return errorMsg.taskNotExist(res);
+            if (findTask[0].poster_id != userId) return errorMsg.cannotUpdateTask(res);
+            const updateQuery = 
+            `
+            UPDATE tasks 
+            SET
+                id = ?,
+                title = ?,
+                content = ?,
+                deadline = ?,
+                task_vacancy = ?,
+                approved_count = ?,
+                location = ?,
+                reward = ?,
+                status = ?,
+                poster_id = ?
+            WHERE id = ?
+            `;
+            const {id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id,} = requestBody
+            await connection.execute(updateQuery, [id, title, content, deadline, task_vacancy, approved_count, location, reward, status, poster_id, taskId]);
+            const data = {
+                data: {
+                    task: {
+                        id: taskId
+                    }
+                }
+            };
+            return data
+        } catch (error) {
+            console.log(error);
+            errorMsg.query(res);
+        } finally {
+            console.log('connection release');
+        }
     }
 }
