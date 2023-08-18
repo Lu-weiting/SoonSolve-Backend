@@ -312,8 +312,9 @@ module.exports = {
         const connection = await connectionPromise;
         try {
             const updateQuery = 'UPDATE tasks SET status = ? WHERE id = ?';
-            const task = await connection.execute(updateQuery, [status, taskId]);
+            const [task] = await connection.execute(updateQuery, [status, taskId]);
             console.log(task);
+            if(task.changedRows === 0) return errorMsg.taskNotExist(res);
             const data = {
                 data: {
                     task: {
