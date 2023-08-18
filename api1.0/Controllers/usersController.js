@@ -123,7 +123,10 @@ module.exports = {
   },
   createComment: async(req,res)=>{
     try {
+      const my_id = req.decodedToken.id;
+      const task_poster_id = Number(req.params.task_poster_id);
       
+
     } catch (error) {
       console.error(error);
       errorMsg.dbConnection(res);
