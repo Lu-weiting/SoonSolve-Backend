@@ -85,24 +85,18 @@ module.exports = {
                 };
                 return users;
               });
-              try {
-                const tasksReqResult = await Promise.all(promises);
-                const response = {
-                  data: {
-                    users: tasksReqResult,
-                    next_cursor: nextCursor
-                  }
-                };
-                return response;
-              } catch (error) {
-                console.error(error);
-                throw new Error('Server error');
-              }
+            const tasksReqResult = await Promise.all(promises);
+            const response = {
+                data: {
+                users: tasksReqResult,
+                next_cursor: nextCursor
+                }
+            };
+            return response;
         } catch (error) {
             errorMsg.query(res);
         } finally {
             console.log('connection release');
-            connection.release();
         }
     },
     updateTaskReq: async (res, status, user_taskId) => {
