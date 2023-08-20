@@ -12,7 +12,6 @@ module.exports = {
         try {
             const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const {title, content, deadline, task_vacancy, location, reward} = context;
-            console.log(context);
             const [result] = await connection.execute(query, [title, content, deadline, task_vacancy, location, reward, "pending", userId]) ;
             const response = {
                 data: {
