@@ -248,9 +248,21 @@ module.exports = {
                             LEFT JOIN users u ON t.poster_id = u.id
                             WHERE t.id = ?
                             `;
-
+            const query_user_task = `SELECT id, status 
+                            FROM user_task
+                            WHERE task_id = ?
+                            `;
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
+            const [result_user_task] = await connection.execute(query_user_task, [postId]);
+            const promises = result_user_task.map(async taskReqResult => {
+                const user_task = {
+                    id: taskReqResult.id,
+                    status: taskReqResult.status
+                };
+                return user_task;
+              });
+            const taskReqResults = await Promise.all(promises);
             const response = {
                 data: {
                     task: {
@@ -269,6 +281,7 @@ module.exports = {
                         nickname: result[0].nickname,
                         picture: result[0].picture,
                         status: result[0].status,
+                        user_task: taskReqResults
                     }
                 }
             };
