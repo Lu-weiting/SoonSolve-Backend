@@ -249,12 +249,14 @@ module.exports = {
                             WHERE t.id = ?
                             `;
             const query_user_task = `SELECT id, status 
-                            FROM user_task
-                            WHERE task_id = ?
-                            `;
+                                    FROM user_task
+                                    WHERE task_id = ?
+                                    `;
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
             const [result_user_task] = await connection.execute(query_user_task, [postId]);
+            console.log(result);
+            console.log(result_user_task);
             const promises = result_user_task.map(async taskReqResult => {
                 const user_task = {
                     id: taskReqResult.id,
