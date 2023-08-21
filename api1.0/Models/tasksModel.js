@@ -152,10 +152,10 @@ module.exports = {
 
             if (location != null) {
                 matched[0] = true;
-                const multipleLocation= location.split(',');
-                console.log(multipleLocation);
+                // const multipleLocation= location.split(',');
+                // console.log(multipleLocation);
                 selected[0] = `T.location in (?)`;
-                finalParam.push(multipleLocation);
+                finalParam.push(location);
             }
             if (friend != null) {
                 matched[1] = true;
