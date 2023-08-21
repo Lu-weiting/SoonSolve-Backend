@@ -152,7 +152,10 @@ module.exports = {
 
             if (location != null) {
                 matched[0] = true;
-                const [multipleLocation]= location.split(',');
+                const [multipleLocation]= location.input
+                    .split(',')             // 將字串分割為陣列
+                    .map(item => `'${item.trim()}'`)  // 對每個部分加上單引號並修剪空格
+                    .join(', ');            // 重新組合成字串，使用逗號和空格分隔
                 console.log(multipleLocation);
                 selected[0] = `T.location in (?)`;
                 finalParam.push(multipleLocation);
