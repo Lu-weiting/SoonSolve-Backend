@@ -12,7 +12,6 @@ module.exports = {
         try {
             const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const {title, content, deadline, task_vacancy, location, reward} = context;
-            console.log(context);
             const [result] = await connection.execute(query, [title, content, deadline, task_vacancy, location, reward, "pending", userId]) ;
             const response = {
                 data: {
@@ -154,8 +153,9 @@ module.exports = {
 
             if (location != null) {
                 matched[0] = true;
+                const multipleLocation= location.split(',');
                 selected[0] = `T.location in (?)`;
-                finalParam.push(location);
+                finalParam.push(multipleLocation);
             }
             if (friend != null) {
                 matched[1] = true;
@@ -167,8 +167,8 @@ module.exports = {
             }
             if (title != null) {
                 matched[2] = true;
-                finalParam.push(title);
-                selected[2] = `T.title = ?`;
+                finalParam.push(`%${title}%`);
+                selected[2] = `T.title LIKE ?`;
             }
             if (sex != null) {
                 matched[3] = true;
