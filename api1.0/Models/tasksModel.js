@@ -32,7 +32,8 @@ module.exports = {
         const connection = await connectionPromise;
         try {
             const query = 'DELETE FROM tasks WHERE id = ? AND poster_id = ?';
-            const result = await connection.execute(query, [taskId, userId]) ;
+            const result = await connection.execute(query, [taskId, userId]);
+            console.log(result);
             if (result.affectedRows > 0){
                 const response = {
                     data: {
