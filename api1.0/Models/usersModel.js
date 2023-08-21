@@ -115,10 +115,7 @@ module.exports = {
         `;
       }
       const [results] = await connection.execute(query, [my_id, decodeCuser]);
-      if (results.length == 0) {
-        return errorMsg.taskNotExist(res);
-      } 
-      else if (results.length < limit) {
+      if (results.length < limit) {
         nextCursor = null;
       } 
       else {
