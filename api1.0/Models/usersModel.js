@@ -56,7 +56,7 @@ module.exports = {
       const signinQuery = 'SELECT * FROM users WHERE email = ?';
       const [is_exist] = await connection.execute(signinQuery, [email]);
       if (is_exist.length === 0) {
-        return errorMsg.noUser(res);
+        errorMsg.noUser(res);
       }
       const user = is_exist[0];
       return user;
