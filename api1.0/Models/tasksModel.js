@@ -152,8 +152,8 @@ module.exports = {
 
             if (location != null) {
                 matched[0] = true;
-                // const multipleLocation= location.split(',');
-                // console.log(multipleLocation);
+                const multipleLocation= location.split(',');
+                console.log(multipleLocation);
                 selected[0] = `T.location in (?)`;
                 finalParam.push(multipleLocation);
             }
@@ -191,6 +191,8 @@ module.exports = {
                                     FROM task_with_user_data
                                     `
             const [result] = await connection.execute(query_string, finalParam);
+            console.log(result);
+            console.log(finalParam);
             const finalData = [];
             let len = result.length;
             if (result.length >= limit) len = result.length - 1;
