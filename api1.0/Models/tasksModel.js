@@ -91,7 +91,6 @@ module.exports = {
             finalParam.push('pending');
             const data = [];
             if (location == null && friend == null && title == null && sex == null) {
-                console.log('test 1');
                 const [result] = await connection.execute(
                     `
                     SELECT 
@@ -112,7 +111,6 @@ module.exports = {
                     `, 
                     ['pending']);
                 let len = result.length;
-                console.log('test 2');
                 if (result.length >= limit) len = result.length - 1;
 
                 if (result.length != 0) {
@@ -155,6 +153,7 @@ module.exports = {
             if (location != null) {
                 matched[0] = true;
                 const multipleLocation= location.split(',');
+                console.log(multipleLocation);
                 selected[0] = `T.location in (?)`;
                 finalParam.push(multipleLocation);
             }
@@ -255,8 +254,6 @@ module.exports = {
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
             const [result_user_task] = await connection.execute(query_user_task, [postId]);
-            console.log(result);
-            console.log(result_user_task);
             const promises = result_user_task.map(async taskReqResult => {
                 const user_task = {
                     id: taskReqResult.id,
