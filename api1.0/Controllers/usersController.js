@@ -36,10 +36,9 @@ module.exports = {
       return errorMsg.inputEmpty(res);
     }
 
-    const user = await usersModel.signIn(email, res);
-
     try{
       // 驗證密碼是否正確
+      const user = await usersModel.signIn(email, res);
       const PASSWORD = user.password;
       const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
       if (PASSWORD !== hashedPassword) {
