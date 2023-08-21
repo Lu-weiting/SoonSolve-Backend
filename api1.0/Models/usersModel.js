@@ -214,10 +214,10 @@ module.exports = {
 
       const data = {
         user: {
-          id: targetProfile[0].uid,
-          name: targetProfile[0].name,
-          picture: targetProfile[0].picture,
-          credit: targetProfile[0].credit,
+          id: targetProfile[0].user_id,
+          name: targetProfile[0].user_name,
+          picture: targetProfile[0].user_picture,
+          credit: targetProfile[0].user_credit,
           comment: comments,
           friendship
         }

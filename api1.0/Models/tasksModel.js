@@ -153,8 +153,9 @@ module.exports = {
 
             if (location != null) {
                 matched[0] = true;
+                const multipleLocation= location.split(',');
                 selected[0] = `T.location in (?)`;
-                finalParam.push(location);
+                finalParam.push(multipleLocation);
             }
             if (friend != null) {
                 matched[1] = true;
@@ -166,8 +167,8 @@ module.exports = {
             }
             if (title != null) {
                 matched[2] = true;
-                finalParam.push(title);
-                selected[2] = `T.title = ?`;
+                finalParam.push(`%${title}%`);
+                selected[2] = `T.title LIKE ?`;
             }
             if (sex != null) {
                 matched[3] = true;
