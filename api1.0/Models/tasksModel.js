@@ -11,8 +11,7 @@ module.exports = {
         const connection = await connectionPromise;
         try {
             const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-            const {title, content, deadline, task_vacancy, location, reward} = context;
-            const [result] = await connection.execute(query, [title, content, deadline, task_vacancy, location, reward, "pending", userId]) ;
+            const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
             const response = {
                 data: {
                     task: {
@@ -23,7 +22,6 @@ module.exports = {
             return response;
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
@@ -32,8 +30,7 @@ module.exports = {
         const connection = await connectionPromise;
         try {
             const query = 'DELETE FROM tasks WHERE id = ? AND poster_id = ?';
-            const result = await connection.execute(query, [taskId, userId]);
-            console.log(result);
+            const result = await connection.execute(query, [taskId, userId]) ;
             if (result.affectedRows > 0){
                 const response = {
                     data: {
@@ -46,7 +43,6 @@ module.exports = {
             }
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
@@ -234,7 +230,6 @@ module.exports = {
             return output2;
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
@@ -248,23 +243,9 @@ module.exports = {
                             LEFT JOIN users u ON t.poster_id = u.id
                             WHERE t.id = ?
                             `;
-            const query_user_task = `SELECT id, status 
-                                    FROM user_task
-                                    WHERE task_id = ?
-                                    `;
+
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
-            const [result_user_task] = await connection.execute(query_user_task, [postId]);
-            console.log(result);
-            console.log(result_user_task);
-            const promises = result_user_task.map(async taskReqResult => {
-                const user_task = {
-                    id: taskReqResult.id,
-                    status: taskReqResult.status
-                };
-                return user_task;
-              });
-            const taskReqResults = await Promise.all(promises);
             const response = {
                 data: {
                     task: {
@@ -283,14 +264,12 @@ module.exports = {
                         nickname: result[0].nickname,
                         picture: result[0].picture,
                         status: result[0].status,
-                        user_task: taskReqResults
                     }
                 }
             };
             return response;
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
@@ -326,7 +305,6 @@ module.exports = {
             return data
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
@@ -348,7 +326,6 @@ module.exports = {
             return data
         } catch (error) {
             errorMsg.query(res);
-            console.error(error);
         } finally {
             console.log('connection release');
         }
