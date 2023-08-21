@@ -190,7 +190,7 @@ module.exports = {
                                     SELECT *
                                     FROM task_with_user_data
                                     `
-            const [result] = await connection.execute(query_string, [finalParam]);
+            const [result] = await connection.execute(query_string, finalParam);
             console.log(result);
             console.log(finalParam);
             const finalData = [];
