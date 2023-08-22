@@ -47,7 +47,7 @@ module.exports = {
         try {
             const query = `SELECT u.id, u.name, u.picture, f.id AS friendship_id, f.status
             FROM users u
-            LEFT JOIN friendship f ON u.id IN f.sender_id
+            LEFT JOIN friendship f ON u.id = f.sender_id
             WHERE (f.status = ? AND f.receiver_id = ?)
             AND u.id <> ?`;
     
