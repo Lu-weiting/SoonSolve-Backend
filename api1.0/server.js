@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 // const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
-const connectionPromise = require('../utils/database').connectionPromise;
+const connectionPromise = require('./utils/database').connectionPromise;
 const dotenv = require('dotenv');
 dotenv.config();
 const {
