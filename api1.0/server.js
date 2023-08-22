@@ -37,7 +37,7 @@ const options = {
     key: fs.readFileSync('./private/private.key'),
     cert: fs.readFileSync('./private/certificate.crt')
   };
-const server = http.createServer(options,app);
+const server = https.createServer(options,app);
 const io = require("socket.io")(server, {
     cors: {
         origin: "https://52.64.240.159",
