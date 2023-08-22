@@ -54,10 +54,11 @@ module.exports = {
             WHERE (f.status = ? AND f.receiver_id = ?)
             AND u.id <> ?`;
     
-            const [results] = await connection.execute(query, [status, userId, userId, userId]) ;
+            const [results] = await connection.execute(query, [status, userId, userId]) ;
+            console.log(userId);
+            console.log(results);
             const friends = [];
             results.forEach((result) => {
-                const Id = parseInt(result.sender_id, 10);
                 const friend = {
                   id: result.id,
                   name: result.name,
