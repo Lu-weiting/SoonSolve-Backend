@@ -6,15 +6,9 @@ const errorMsg = require('../utils/error');
 module.exports = {
   getMessage: async (req, res) => {
     try{
-      const roomId = Number(req.params.room_id);
-      const roomMsg = await chatModel.getMessage(res, roomId);
-      
-      const response = {
-        "data": {
-          "events": notification_result
-        }
-      };
-      return res.json(response);
+        const roomId = Number(req.params.room_id);
+        const result = await chatModel.getMessage(res, roomId);
+        return res.json(result);
     }
     catch(error){
       errorMsg.controllerProblem(res);
@@ -24,13 +18,7 @@ module.exports = {
   deleteMessage: async (req, res) => {
     try{
       const roomId = Number(req.params.room_id);
-      await chatModel.deleteMessage(res, roomId);
-        
-      const response = {
-        "data": {
-          "room_id": roomId
-        }
-      };
+      const response = await chatModel.deleteMessage(res, roomId);
       return res.json(response);
     }
     catch(error){
