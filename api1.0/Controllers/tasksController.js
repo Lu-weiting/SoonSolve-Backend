@@ -20,7 +20,7 @@ module.exports = {
     deletetask: async (req, res) => {
       try{
         const taskId = Number(req.params.id);
-        const {userId} = req.decodedToken;
+        const userId = req.decodedToken.id;
         if(!isNaN(taskId)){
           const result = await tasksModel.deletetask(res, taskId, userId);
           res.status(200).json(result);
