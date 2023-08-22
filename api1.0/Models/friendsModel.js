@@ -134,6 +134,7 @@ module.exports = {
                 };
                 const type = 'friend_reqAccept'
                 const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+                console.log(friend[0].sender_id);
                 await connection.execute(eventQuery, [friend[0].sender_id, friend[0].receiver_id, type, false]);
                 return response;
             }
