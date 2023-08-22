@@ -3,6 +3,7 @@ const cors = require('cors');
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 // 
 // const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
@@ -68,7 +69,7 @@ io.on("connection", (socket) => {
     const token = socket.handshake.headers.authorization
     console.log("socket test token:", token)
     const accessToken = token.split(' ')[1];
-    const decoded = jwt.verify(accessToken, 'process.env.SECRET');
+    const decoded = jwt.verify(accessToken, process.env.SECRET);
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
 
