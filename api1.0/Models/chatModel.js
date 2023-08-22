@@ -49,8 +49,13 @@ module.exports = {
     try{
       const connection = await connectionPromise;
       const query = `DELETE FROM rooms WHERE id = ?`;
-      const [result] = await connection.execute(query, [roomId]);
-      return result;
+      await connection.execute(query, [roomId]);
+      const response = {
+        "data": {
+          "room_id": roomId
+        }
+      };
+      return response;
     }
     catch (error) {
       errorMsg.query(res);

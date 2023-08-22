@@ -118,7 +118,7 @@ module.exports = {
                 const friendquery = 
                 `
                 SELECT 
-                    sender_id
+                    sender_id,
                     receiver_id
                 FROM friendship 
                 WHERE id = ?
