@@ -7,14 +7,8 @@ module.exports = {
     getMessage: async (req, res) => {
     try{
         const roomId = Number(req.params.room_id);
-        const roomMsg = await chatModel.getMessage(res, roomId);
-        
-      const response = {
-        "data": {
-          "events": notification_result
-        }
-      };
-      return res.json(response);
+        const result = await chatModel.getMessage(res, roomId);
+        return res.json(result);
     }
     catch(error){
       errorMsg.controllerProblem(res);

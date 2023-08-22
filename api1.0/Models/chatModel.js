@@ -14,14 +14,29 @@ module.exports = {
     try{
       const connection = await connectionPromise;
       const query = `
-      SELECT * 
-      FROM messages m JOIN users 
-      ON users.id IN (m.sender_id, m.receiver_id)
-      WHERE room_id = ? 
-      ORDER BY created_at DESC
+      SELECT *
+      FROM messages
+      WHERE room_id = ?
+      ORDER BY created_at DESC;
       `;
-      const [result] = await connection.execute(query, [roomId]);
-      return result;
+      const [results] = await connection.execute(query, [roomId]);
+      const promises = results.map(async messagesResult => {
+        const messages = {
+          id: messagesResult.id,
+          message: messagesResult.message,
+          sender_id: messagesResult.sender_id,
+          receiver_id: messagesResult.receiver_id,
+          created_at: moment.utc(messagesResult.created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+        };
+        return messages;
+      });
+      const msgResult = await Promise.all(promises);
+      const response = {
+        data: {
+            messages: msgResult,
+        }
+      };
+      return response;
     }
     catch (error) {
       errorMsg.query(res);
