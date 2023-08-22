@@ -3,9 +3,10 @@ const cors = require('cors');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+// 
 // const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
-const connectionPromise = require('../utils/database').connectionPromise;
+const connectionPromise = require('./utils/database').connectionPromise;
 const dotenv = require('dotenv');
 dotenv.config();
 const {
@@ -22,7 +23,7 @@ require('dotenv').config();
 app.use(cors());
 app.use('/static', express.static('/soonsolve/static'));
 app.use(express.json());
-const usersRouter = require('./Routers/usersRouter')
+const usersRouter = require('./Routers/usersRouter');
 const tasksRouter = require('./Routers/tasksRouter');
 const tasksReqRouter = require('./Routers/tasksReqRouter');
 const eventsRouter = require('./Routers/eventsRouter')
@@ -36,14 +37,16 @@ app.use('/api/1.0//events/', eventsRouter);
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
-const options = {
-    key: fs.readFileSync('./private/private.key'),
-    cert: fs.readFileSync('./private/certificate.crt')
-  };
-const server = http.createServer(options,app);
+
+// const options = {
+//     key: fs.readFileSync('./private/private.key'),
+//     cert: fs.readFileSync('./private/certificate.crt')
+//   };
+
+const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "https://52.64.240.159",
+        origin: "http://52.64.240.159:80",
     },
 });
 
@@ -99,4 +102,4 @@ const PORT = 3000;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-module.exports = server;
+// module.exports = server;
