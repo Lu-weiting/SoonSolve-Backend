@@ -33,14 +33,7 @@ module.exports = {
   deleteMessage: async (res, roomId) => {
     try{
       const connection = await connectionPromise;
-      const query = 
-      `
-      SELECT * 
-      FROM messages m JOIN users 
-      ON users.id IN (m.sender_id, m.receiver_id)
-      WHERE room_id = ? 
-      ORDER BY created_at DESC
-      `;
+      const query = `DELETE FROM rooms WHERE id = ?`;
       const [result] = await connection.execute(query, [roomId]);
       return result;
     }
