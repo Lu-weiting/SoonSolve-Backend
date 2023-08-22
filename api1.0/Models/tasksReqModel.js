@@ -17,11 +17,11 @@ module.exports = {
                 }
             };
             const taskQuery = `SELECT poster_id from tasks WHERE id = ?`;
-            const [task] = await connection.execute(taskQuery, [taskId])[0];
+            const [task] = await connection.execute(taskQuery, [taskId]);
             console.log(task);
             const type = 'task_request'
             const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
-            await connection.execute(eventQuery, [userId, task.poster_id, type, false]);
+            await connection.execute(eventQuery, [userId, task[0].poster_id, type, false]);
             return data;
         } catch (error) {
             console.log(error);
