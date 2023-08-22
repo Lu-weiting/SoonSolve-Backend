@@ -40,7 +40,7 @@ const options = {
 const server = https.createServer(options,app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "https://52.64.240.159:3000",
+        origin: "https://52.64.240.159",
     },
 });
 
@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
     });
 
     // Runs when client disconnects
-    socket.on("disconnect", () => {
+    socket.on("userDisconnect", () => {
         const user = userLeave(socket.id);
     });
 
