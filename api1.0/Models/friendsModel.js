@@ -80,4 +80,24 @@ module.exports = {
             console.log('connection release');
         }
     },
+    friendRequest: async (res, status, senderId, receiverId) => {
+        const connection = await connectionPromise;
+        try {
+            const query = `INSERT INTO friendship (sender_id, receiver_id, status) VALUES (?, ?, ?)`;
+            const [result] = await connection.execute(query, [senderId, receiverId, status]) ;
+            const response = {
+                data: {
+                    friendship: {
+                        id: result.insertId
+                    }
+                }
+            };
+            return response;
+        } catch (error) {
+            errorMsg.query(res);
+            console.error(error);
+        } finally {
+            console.log('connection release');
+        }
+    },
 }

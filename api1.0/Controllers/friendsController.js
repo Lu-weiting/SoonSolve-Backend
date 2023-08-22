@@ -29,4 +29,23 @@ module.exports = {
             console.error(error);
         }
     },
+    sendFriendRequest: async (req, res, friendshipStatus) => {
+        try{
+            const senderId = req.decodedToken.id;
+            const receiverId = Number(req.params.user_id);
+            if (!isNaN(receiverId)) {
+                const result = await friendsModel.friendRequest(res, friendshipStatus, senderId, receiverId);
+                
+                res.status(200).json(result);
+            }else {
+                errorMsg.userNotFound(res);
+            }
+            
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
+            console.error(error);
+        }
+    },
+    
 }

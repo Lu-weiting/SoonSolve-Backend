@@ -12,10 +12,13 @@ router.get('/', auth.verifyToken, (req, res) => {
 // Friends Pending API
 router.get('/pending', auth.verifyToken, (req, res) => {
     const status = 'pending';
-    friendsController.getPendingRequests(req, res, status);
+    friendsController.getPending(req, res, status);
 });
 // Friends Request API
-router.post('/:user_id/request', auth.verifyToken, friendsController.sendFriendRequest);
+router.post('/:user_id/request', auth.verifyToken, (req, res) => {
+    const status = 'requested';
+    friendsController.sendFriendRequest(req, res, status);
+});
 
 // Friends Agree API
 router.post('/:friendship_id/agree', auth.verifyToken, friendsController.agreeFriendRequest);
