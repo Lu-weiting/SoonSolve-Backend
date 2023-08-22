@@ -87,7 +87,7 @@ io.on("connection", (socket) => {
         io.to(user.room).emit("message", formatMessage(user.username, msg.message));
         const connection = await connectionPromise;
         try {
-            const sql = "INSERT INTO message (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
+            const sql = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
             const [insertChat] = await connection.execute(sql, [msg.message, decoded.id, msg.id, user.room]);
 
         } catch (error) {
