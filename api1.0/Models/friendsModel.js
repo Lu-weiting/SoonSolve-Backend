@@ -100,4 +100,25 @@ module.exports = {
             console.log('connection release');
         }
     },
+    agreeFriendRequest: async (res, friendshipId) => {
+        const connection = await connectionPromise;
+        try {
+            const query = `UPDATE friendship SET status = "friend" \
+            WHERE id = ?`;
+            const [result] = await connection.execute(query, [friendshipId]) ;
+            const response = {
+                data: {
+                    friendship: {
+                        id: friendshipId
+                    }
+                }
+            };
+            return response;
+        } catch (error) {
+            errorMsg.query(res);
+            console.error(error);
+        } finally {
+            console.log('connection release');
+        }
+    },
 }

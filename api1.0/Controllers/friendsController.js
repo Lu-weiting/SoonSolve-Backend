@@ -47,5 +47,21 @@ module.exports = {
             console.error(error);
         }
     },
+    agreeFriendRequest: async (req, res, friendshipStatus) => {
+        try{
+            const friendshipId = Number(req.params.friendship_id);
+            if (!isNaN(friendshipId)) {
+                const result = await friendsModel.agreeFriendRequest(res, friendshipId);
+                res.status(200).json(result);
+            }else {
+                errorMsg.friendshipNotFound(res);
+            }
+            
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
+            console.error(error);
+        }
+    },
     
 }
