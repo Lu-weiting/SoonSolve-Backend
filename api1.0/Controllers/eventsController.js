@@ -1,36 +1,34 @@
-const usersModel = require('../Models/usersModel');
-const auth = require('../utils/auth')
+const eventsModel = require('../Models/eventsModel');
 const tool = require('../utils/tool')
-const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
 const errorMsg = require('../utils/error');
 
 
 module.exports = {
   getEvent: async (req, res) => {
     try{
-      const connection = await connectionPromise;
       const my_id = req.decoded.id;
 
-      const eventQuery = 
-      `
-      SELECT 
-        events.id AS events_id, 
-        type, is_read,
-        DATE_FORMAT(CONVERT_TZ(created_at, '+00:00', '+08:00'), "%Y-%m-%d %H:%i:%s") AS formatted_created_at, 
-        name, picture 
-      FROM users JOIN events 
-      ON users.id = events.sender_id 
-      WHERE receiver_id = ? 
-      ORDER BY created_at DESC
-      `;
-      const [notification] = await connection.execute(eventQuery, [my_id]);
-
+      const notification = await eventsModel.getEvent(my_id, res);
+      
       const notification_result = notification.map((notification) => {
         let summary = '';
-        if (notification.type === 'friend request') {
-          summary = 'invited you to be friends.';
-        } else {
-          summary = 'has accepted your friend request.';
+        if (notification.type === 'friend_request') {
+          summary = `${notification.name} invited you to be friends.`;
+        } 
+        else if(notification.type === 'friend_reqAccept'){
+          summary = `${notification.name} has accepted your friend request.`;
+        }
+        else if(notification.type === 'task_request'){
+          summary = `${notification.name} would like to take on your task.`;
+        }
+        else if(notification.type === 'task_reqAccept'){
+          summary = `${notification.name} has accepted your task application.`;
+        }
+        else if(notification.type === 'comment'){
+          summary = `${notification.name} has left a comment for you.`;
+        }
+        else if(notification.type === 'friend_task'){
+          summary = `Your friend ${notification.name} has posted a task.`;
         }
         return {
           id: notification.events_id,
@@ -38,7 +36,7 @@ module.exports = {
           is_read: Boolean(notification.is_read),
           image: notification.picture,
           created_at: notification.formatted_created_at,
-          summary: `${notification.name} ${summary}`,
+          summary: summary
         };
       });
       const response = {
@@ -46,6 +44,25 @@ module.exports = {
           "events": notification_result
         }
       };
+      return res.json(response);
+    }
+    catch(error){
+      errorMsg.controllerProblem(res);
+      console.error(error);
+    }
+  },
+  readEvent: async (req, res) => {
+    try{
+      const event_id = req.params.event_id;
+      
+      const event = await eventsModel.readEvent(event_id)
+      const response = {
+        "data": {
+          "event": {
+            "id": event_id
+          }
+        }
+      }
       return res.json(response);
     }
     catch(error){

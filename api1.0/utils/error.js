@@ -38,6 +38,9 @@ module.exports = {
     userNotFound: (res) =>{
         res.status(400).json({ error: 'user not found' });
     },
+    friendshipNotFound: (res) =>{
+        res.status(400).json({ error: 'friendship not found' });
+    },
     cannotUpdateTask: (res) =>{
         res.status(400).json({ error: 'cannotUpdateTask' });
     },

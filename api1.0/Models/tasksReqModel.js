@@ -7,7 +7,7 @@ module.exports = {
     sendRequest: async (res, ask_count, taskId, userId) => {
         const connection = await connectionPromise;
         try {
-            const [insertResult]=await connection.execute("INSERT INTO user_task (status,task_id,taker_id,ask_count) VALUES (? ,?,?,?)",['pending',taskId,userId,ask_count]);
+            const [insertResult]=await connection.execute("INSERT INTO user_task (status,task_id,taker_id,ask_count) VALUES (?,?,?,?)",['pending',taskId,userId,ask_count]);
             const data = {
                 data:
                 {
@@ -16,6 +16,11 @@ module.exports = {
                     }
                 }
             };
+            const taskQuery = `SELECT poster_id from tasks WHERE id = ?`;
+            const [task] = await connection.execute(taskQuery, [taskId]);
+            const type = 'task_request'
+            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+            await connection.execute(eventQuery, [userId, task.poster_id, type, false]);
             return data;
         } catch (error) {
             console.log(error);
@@ -54,7 +59,9 @@ module.exports = {
               } else {
                 decodeCuser = await tool.decryptCursor(cursor);
               }
-            const query = `SELECT ut.id, ut.ask_count, ut.status, u.id AS user_id , u.name, u.picture 
+            const query = 
+            `
+            SELECT ut.id, ut.ask_count, ut.status, u.id AS user_id , u.name, u.picture 
             FROM user_task ut 
             LEFT JOIN tasks t ON t.id = ut.task_id
             LEFT JOIN users u ON ut.taker_id = u.id
