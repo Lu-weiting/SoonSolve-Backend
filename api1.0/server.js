@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const https = require('https');
+const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
@@ -43,7 +43,7 @@ const options = {
     key: fs.readFileSync('./private/private.key'),
     cert: fs.readFileSync('./private/certificate.crt')
   };
-const server = https.createServer(options,app);
+const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
     cors: {
@@ -88,10 +88,7 @@ io.on("connection", (socket) => {
         } finally {
             console.log('connection release');
         }
-
-
     });
-
     // Runs when client disconnects
     socket.on("userDisconnect", () => {
         const user = userLeave(socket.id);
