@@ -69,7 +69,6 @@ module.exports = {
       const my_id = req.decodedToken.id;
       const type = req.params.type;
       const cursor = req.query.cursor;
-      console.log(type);
       let limit = 10;
       if (type != 'Released' && type != 'Accepted') return errorMsg.inputEmpty(res);
       const result = await usersModel.tasksRecord(res, my_id, type, cursor ? cursor : null, limit);

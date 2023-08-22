@@ -258,6 +258,7 @@ module.exports = {
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
             const [result_user_task] = await connection.execute(query_user_task, [postId]);
+            console.log()
             const promises = result_user_task.map(async taskReqResult => {
                 const user_task = {
                     id: taskReqResult.id,
