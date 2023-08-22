@@ -113,6 +113,7 @@ module.exports = {
         try {
             const query = `UPDATE friendship SET status = "friend" WHERE id = ?`;
             const [result] = await connection.execute(query, [friendshipId]) ;
+            console.log(result);
             if (result.affectedRows > 0){
                 const friendquery = 
                 `
@@ -123,6 +124,7 @@ module.exports = {
                 WHERE id = ?
                 `;
                 const [friend] = await connection.execute(friendquery, [friendshipId]) ;
+                console.log(friend);
                 const response = {
                     data: {
                         friendship: {
