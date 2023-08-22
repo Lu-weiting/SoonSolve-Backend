@@ -11,11 +11,22 @@ module.exports = {
             const userId = req.decodedToken.id;
             const result = await friendsModel.getFriends(res, friendshipStatus, userId);
             res.status(200).json(result);
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
+            console.error(error);
+        }
+    },
+    getPending: async (req, res, friendshipStatus) => {
+        try{
+            const receiverId = req.decodedToken.id;
+            const result = await friendsModel.getPending(res, friendshipStatus, receiverId);
+            res.status(200).json(result);
             
         }
         catch (error) {
             errorMsg.controllerProblem(res);
             console.error(error);
         }
-      },
+    },
 }
