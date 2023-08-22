@@ -44,6 +44,7 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
         origin: "http://52.64.240.159:80",
+        credentials: true
     },
 });
 
