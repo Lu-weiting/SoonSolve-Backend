@@ -43,6 +43,7 @@ jobs:
           echo "${{ secrets.ENV }}" > .env
           echo "${{ secrets.PRIVATE_KEY }}" > private/private.key
           echo "${{ secrets.CERTIFICATE }}" > private/certificate.crt
+          docker system prune
           docker-compose down
           docker-compose up --build -d
           docker image prune -af
