@@ -99,6 +99,7 @@ io.on("connection", (socket) => {
         const connection = await connectionPromise;
         try {
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
+            console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             const [insertChat2] = await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
             console.log(error);
