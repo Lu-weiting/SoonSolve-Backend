@@ -55,13 +55,19 @@ io.use((socket, next) => {
     const token = socket.handshake.headers.authorization
     console.log("socket test token:", token)
     if (!token || !token.startsWith('Bearer ')) {
+        console.log("No token provided")
         return { error: 'No token provided' };
-    }
-    try {
+      }
+      try {
+        const accessToken = token.split(' ')[1];
+        // 'WeShare' 之後要移去.env
+        const decoded = jwt.verify(accessToken, process.env.SECRET);
+        console.log("Decoded:",decoded)
         next();
-    } catch (error) {
+      } catch (error) {
+        console.log("error:",error)
         return { error: 'Invalid token' };
-    }
+      }
 });
 io.on("connection", (socket) => {
     const token = socket.handshake.headers.authorization
