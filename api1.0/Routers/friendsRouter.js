@@ -11,7 +11,7 @@ router.get('/', auth.verifyToken, (req, res) => {
 });
 // Friends Pending API
 router.get('/pending', auth.verifyToken, (req, res) => {
-    const status = 'pending';
+    const status = 'requested';
     friendsController.getPending(req, res, status);
 });
 // Friends Request API
