@@ -43,7 +43,8 @@ const options = {
     cert: fs.readFileSync('./private/certificate.crt')
   };
 
-const server = https.createServer(options,app);
+const server = https.createServer(options);
+server.listen(4000);
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
@@ -101,6 +102,6 @@ io.on("connection", (socket) => {
 
 const PORT = 3000;
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // module.exports = server;
