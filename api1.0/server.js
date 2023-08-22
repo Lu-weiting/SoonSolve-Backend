@@ -39,7 +39,7 @@ const options = {
     cert: fs.readFileSync('./private/certificate.crt')
   };
 //
-const server = https.createServer(options,app);
+const server = https.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
         origin: "https://52.64.240.159",
