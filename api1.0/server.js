@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const https = require('https');
+const https = require('http');
 const path = require('path');
 const fs = require('fs');
 // const socketio = require("socket.io");
@@ -40,7 +40,7 @@ const options = {
 const server = https.createServer(options,app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "https://52.64.240.159",
+        origin: "http://52.64.240.159:3000",
     },
 });
 
