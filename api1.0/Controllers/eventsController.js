@@ -8,9 +8,7 @@ const errorMsg = require('../utils/error');
 module.exports = {
   getEvent: async (req, res) => {
     try{
-      const connection = await connectionPromise;
       const my_id = req.decoded.id;
-
       const eventQuery = 
       `
       SELECT 
