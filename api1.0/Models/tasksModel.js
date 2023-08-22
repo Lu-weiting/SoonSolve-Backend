@@ -251,7 +251,7 @@ module.exports = {
                             LEFT JOIN users u ON t.poster_id = u.id
                             WHERE t.id = ?
                             `;
-            const query_user_task = `SELECT id, status 
+            const query_user_task = `SELECT id, status, taker_id, ask_count
                                     FROM user_task
                                     WHERE task_id = ?
                                     `;
@@ -261,7 +261,9 @@ module.exports = {
             const promises = result_user_task.map(async taskReqResult => {
                 const user_task = {
                     id: taskReqResult.id,
-                    status: taskReqResult.status
+                    status: taskReqResult.status,
+                    taker_id: taskReqResult.taker_id,
+                    ask_count: taskReqResult.ask_count
                 };
                 return user_task;
               });
