@@ -55,8 +55,6 @@ module.exports = {
             AND u.id <> ?`;
     
             const [results] = await connection.execute(query, [status, userId, userId]) ;
-            console.log(userId);
-            console.log(results);
             const friends = [];
             results.forEach((result) => {
                 const friend = {
