@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 // 
@@ -23,7 +23,7 @@ require('dotenv').config();
 app.use(cors());
 app.use('/static', express.static('/soonsolve/static'));
 app.use(express.json());
-const usersRouter = require('./Routers/usersRouter')
+const usersRouter = require('./Routers/usersRouter');
 const tasksRouter = require('./Routers/tasksRouter');
 const tasksReqRouter = require('./Routers/tasksReqRouter');
 
@@ -34,15 +34,15 @@ app.use('/api/1.0/task_req', tasksReqRouter);
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
-// const options = {
-//     key: fs.readFileSync('./private/private.key'),
-//     cert: fs.readFileSync('./private/certificate.crt')
-//   };
-//options,
-const server = http.createServer(app);
+const options = {
+    key: fs.readFileSync('./private/private.key'),
+    cert: fs.readFileSync('./private/certificate.crt')
+  };
+//
+const server = https.createServer(options,app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://52.64.240.159:3000",
+        origin: "https://52.64.240.159",
     },
 });
 
