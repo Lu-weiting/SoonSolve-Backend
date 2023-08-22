@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 // 
@@ -33,7 +33,7 @@ app.use('/api/1.0/users', usersRouter);
 app.use('/api/1.0/tasks', tasksRouter);
 app.use('/api/1.0/task_req', tasksReqRouter);
 app.use('/api/1.0/friends', friendsRouter);
-app.use('/api/1.0//events/', eventsRouter);
+app.use('/api/1.0/events/', eventsRouter);
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
@@ -43,7 +43,7 @@ app.get('/api/1.0/', (req, res) => {
 //     cert: fs.readFileSync('./private/certificate.crt')
 //   };
 
-const server = http.createServer(app);
+const server = https.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
         origin: "http://52.64.240.159:80",
@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
     const token = socket.handshake.headers.authorization
     console.log("socket test token:", token)
     const accessToken = token.split(' ')[1];
-    const decoded = jwt.verify(accessToken, 'process.env.SECRET');
+    const decoded = jwt.verify(accessToken, process.env.SECRET);
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
 
