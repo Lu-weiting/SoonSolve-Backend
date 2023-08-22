@@ -74,6 +74,7 @@ io.on("connection", (socket) => {
     console.log("socket test token:", token)
     const accessToken = token.split(' ')[1];
     const decoded = jwt.verify(accessToken, process.env.SECRET);
+    console.log(decoded);
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
         console.log(socket.id);
