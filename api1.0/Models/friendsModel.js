@@ -9,11 +9,14 @@ module.exports = {
     getFriends: async (res, status, userId) => {
         const connection = await connectionPromise;
         try {
-            const query = `SELECT u.id, u.name, u.picture, f.id AS friendship_id, f.status
+            const query = 
+            `
+            SELECT u.id, u.name, u.picture, f.id AS friendship_id, f.status
             FROM users u
             LEFT JOIN friendship f ON u.id IN (f.sender_id, f.receiver_id)
             WHERE (f.status = ? AND (f.sender_id = ? OR f.receiver_id = ?))
-            AND u.id <> ?`;
+            AND u.id <> ?
+            `;
             const [results] = await connection.execute(query, [status, userId, userId, userId]) ;
             const friends = [];
             results.forEach((result) => {
@@ -95,6 +98,9 @@ module.exports = {
                 };
                 return response;
             }
+            const type = 'friend_request'
+            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read, created_at) VALUES(?,?,?,?,NOW())';
+            await connection.execute(eventQuery, [senderId, receiverId, type, false]);
         } catch (error) {
             errorMsg.query(res);
             console.error(error);
@@ -105,8 +111,7 @@ module.exports = {
     agreeFriendRequest: async (res, friendshipId) => {
         const connection = await connectionPromise;
         try {
-            const query = `UPDATE friendship SET status = "friend" \
-            WHERE id = ?`;
+            const query = `UPDATE friendship SET status = "friend" WHERE id = ?`;
             const [result] = await connection.execute(query, [friendshipId]) ;
             if (result.affectedRows > 0){
                 const response = {
@@ -116,6 +121,9 @@ module.exports = {
                         }
                     }
                 };
+                const type = 'friend_reqAccept'
+                const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read, created_at) VALUES(?,?,?,?,NOW())';
+                await connection.execute(eventQuery, [senderId, receiverId, type, false]);
                 return response;
             }
         } catch (error) {
