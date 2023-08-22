@@ -75,11 +75,20 @@ io.on("connection", (socket) => {
     const accessToken = token.split(' ')[1];
     const decoded = jwt.verify(accessToken, process.env.SECRET);
     console.log(decoded);
-    socket.on("joinRoom", ({ username, room }) => {
+    socket.on("joinRoom", async({ username, room }) => {
         const user = userJoin(socket.id, username, room);
         console.log(socket.id);
         socket.join(user.room);
         console.log("join success");
+        const connection = await connectionPromise;
+        try {
+            const sql1 = "INSERT INTO rooms (id) VALUES (?)";
+            const [insertChat1] = await connection.execute(sql1, [user.room]);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            console.log('connection release');
+        }
 
     });
     socket.on("newMessage", async(msg) => {
@@ -87,11 +96,8 @@ io.on("connection", (socket) => {
         io.to(user.room).emit("message", formatMessage(user.username, msg.message));
         const connection = await connectionPromise;
         try {
-            const sql1 = "INSERT INTO rooms (id) VALUES (?)";
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
-            const [insertChat1] = await connection.execute(sql1, [user.room]);
             const [insertChat2] = await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
-
         } catch (error) {
             console.log(error);
         } finally {
