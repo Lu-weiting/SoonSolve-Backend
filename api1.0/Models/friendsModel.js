@@ -99,7 +99,7 @@ module.exports = {
                 return response;
             }
             const type = 'friend_request'
-            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read, created_at) VALUES(?,?,?,?,NOW())';
+            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
             await connection.execute(eventQuery, [senderId, receiverId, type, false]);
         } catch (error) {
             errorMsg.query(res);
@@ -114,6 +114,15 @@ module.exports = {
             const query = `UPDATE friendship SET status = "friend" WHERE id = ?`;
             const [result] = await connection.execute(query, [friendshipId]) ;
             if (result.affectedRows > 0){
+                const friendquery = 
+                `
+                SELECT 
+                    sender_id
+                    receiver_id
+                FROM friendship 
+                WHERE id = ?
+                `;
+                const [friend] = await connection.execute(friendquery, [friendshipId]) ;
                 const response = {
                     data: {
                         friendship: {
@@ -122,8 +131,8 @@ module.exports = {
                     }
                 };
                 const type = 'friend_reqAccept'
-                const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read, created_at) VALUES(?,?,?,?,NOW())';
-                await connection.execute(eventQuery, [senderId, receiverId, type, false]);
+                const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+                await connection.execute(eventQuery, [friend.senderId, friend.receiverId, type, false]);
                 return response;
             }
         } catch (error) {
