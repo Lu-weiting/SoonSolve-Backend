@@ -47,7 +47,7 @@ module.exports = {
             console.error(error);
         }
     },
-    agreeFriendRequest: async (req, res, friendshipStatus) => {
+    agreeFriendRequest: async (req, res) => {
         try{
             const friendshipId = Number(req.params.friendship_id);
             if (!isNaN(friendshipId)) {
@@ -63,5 +63,19 @@ module.exports = {
             console.error(error);
         }
     },
-    
+    deleteFriendRequest: async (req, res) => {
+        try{
+            const friendshipId = Number(req.params.friendship_id);
+            if (!isNaN(friendshipId)) {
+                const result = await friendsModel.deleteFriendRequest(res, friendshipId);
+                res.status(200).json(result);
+            }else {
+                errorMsg.friendshipNotFound(res);
+            }
+        }
+        catch (error) {
+            errorMsg.controllerProblem(res);
+            console.error(error);
+        }
+    }
 }

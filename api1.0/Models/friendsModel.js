@@ -85,14 +85,16 @@ module.exports = {
         try {
             const query = `INSERT INTO friendship (sender_id, receiver_id, status) VALUES (?, ?, ?)`;
             const [result] = await connection.execute(query, [senderId, receiverId, status]) ;
-            const response = {
-                data: {
-                    friendship: {
-                        id: result.insertId
+            if (result.affectedRows > 0){
+                const response = {
+                    data: {
+                        friendship: {
+                            id: result.insertId
+                        }
                     }
-                }
-            };
-            return response;
+                };
+                return response;
+            }
         } catch (error) {
             errorMsg.query(res);
             console.error(error);
@@ -106,14 +108,16 @@ module.exports = {
             const query = `UPDATE friendship SET status = "friend" \
             WHERE id = ?`;
             const [result] = await connection.execute(query, [friendshipId]) ;
-            const response = {
-                data: {
-                    friendship: {
-                        id: friendshipId
+            if (result.affectedRows > 0){
+                const response = {
+                    data: {
+                        friendship: {
+                            id: friendshipId
+                        }
                     }
-                }
-            };
-            return response;
+                };
+                return response;
+            }
         } catch (error) {
             errorMsg.query(res);
             console.error(error);
@@ -121,4 +125,26 @@ module.exports = {
             console.log('connection release');
         }
     },
+    deleteFriendRequest: async (res, friendshipId) => {
+        const connection = await connectionPromise;
+        try {
+            const query = `DELETE FROM friendship WHERE id = ?`;
+            const [result] = await connection.execute(query, [friendshipId]) ;
+            if (result.affectedRows > 0){
+                const response = {
+                    data: {
+                        friendship: {
+                            id: friendshipId
+                        }
+                    }
+                };
+                return response;
+            }
+        } catch (error) {
+            errorMsg.query(res);
+            console.error(error);
+        } finally {
+            console.log('connection release');
+        }
+    }
 }
