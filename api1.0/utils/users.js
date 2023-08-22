@@ -1,7 +1,7 @@
 const users = [];
 
 function userJoin(id, username, room) {
-
+    console.log("head~~");
     const user = { id, username, room };
     console.log(user);
     users.push(user);

@@ -76,6 +76,7 @@ io.on("connection", (socket) => {
     const decoded = jwt.verify(accessToken, process.env.SECRET);
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
+        console.log(socket.id);
         socket.join(user.room);
         console.log("join success");
 
