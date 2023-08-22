@@ -1,5 +1,4 @@
 const tasksModel = require('../Models/tasksModel');
-const error = require('../utils/error');
 const errorMsg = require('../utils/error');
 module.exports = {
     createTask: async (req, res) => {
