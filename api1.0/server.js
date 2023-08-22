@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 // 
 // const socketio = require("socket.io");
 const formatMessage = require("./utils/messages");
@@ -38,15 +39,16 @@ app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
 
-// const options = {
-//     key: fs.readFileSync('./private/private.key'),
-//     cert: fs.readFileSync('./private/certificate.crt')
-//   };
+const options = {
+    key: fs.readFileSync('./private/private.key'),
+    cert: fs.readFileSync('./private/certificate.crt')
+  };
+const server = https.createServer(options,app);
 
-const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://52.64.240.159:80",
+        origin: "*",
+        credentials: true
     },
 });
 
@@ -66,7 +68,7 @@ io.on("connection", (socket) => {
     const token = socket.handshake.headers.authorization
     console.log("socket test token:", token)
     const accessToken = token.split(' ')[1];
-    const decoded = jwt.verify(accessToken, 'process.env.SECRET');
+    const decoded = jwt.verify(accessToken, process.env.SECRET);
     socket.on("joinRoom", ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
 
