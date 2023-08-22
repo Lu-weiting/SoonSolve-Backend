@@ -27,9 +27,6 @@ module.exports = {
         else if(notification.type === 'comment'){
           summary = `${notification.name} has left a comment for you.`;
         }
-        else if(notification.type === 'friend_task'){
-          summary = `Your friend ${notification.name} has posted a task.`;
-        }
         return {
           id: notification.events_id,
           type: notification.type,
