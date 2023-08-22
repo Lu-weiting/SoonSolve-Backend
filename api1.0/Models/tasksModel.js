@@ -117,7 +117,7 @@ module.exports = {
                             poster_id: result[i].poster_id,
                             created_at: moment.utc(result[i].task_created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
                             closed_at: moment.utc(result[i].task_closed_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
-                            deadline: moment.utc(result[i].deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+                            deadline: moment.result[i].deadline,
                             task_vacancy: result[i].task_vacancy,
                             approved_count: result[i].approved_count,
                             title: result[i].title,
@@ -203,7 +203,7 @@ module.exports = {
                         poster_id: result[i].poster_id,
                         created_at: moment.utc(result[i].task_created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
                         closed_at: moment.utc(result[i].task_closed_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
-                        deadline: moment.utc(result[i].deadline).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
+                        deadline: moment.result[i].deadline,
                         task_vacancy: result[i].task_vacancy,
                         approved_count: result[i].approved_count,
                         title: result[i].title,
@@ -242,15 +242,19 @@ module.exports = {
         const connection = await connectionPromise;
         try {
 
-            const query = `SELECT t.*, u.name, u.nickname, u.picture 
-                            FROM tasks t
-                            LEFT JOIN users u ON t.poster_id = u.id
-                            WHERE t.id = ?
-                            `;
-            const query_user_task = `SELECT id, status, taker_id, ask_count
-                                    FROM user_task
-                                    WHERE task_id = ?
-                                    `;
+            const query =
+             `
+            SELECT t.*, u.name, u.nickname, u.picture 
+            FROM tasks t
+            LEFT JOIN users u ON t.poster_id = u.id
+            WHERE t.id = ?
+            `;
+            const query_user_task = 
+            `
+            SELECT id, status, taker_id, ask_count
+            FROM user_task
+            WHERE task_id = ?
+            `;
             const [result] = await connection.execute(query, [postId]);
             if (result.length == 0) return errorMsg.taskNotExist(res);
             const [result_user_task] = await connection.execute(query_user_task, [postId]);
