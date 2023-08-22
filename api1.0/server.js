@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 // 
@@ -38,12 +38,12 @@ app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
 
-// const options = {
-//     key: fs.readFileSync('./private/private.key'),
-//     cert: fs.readFileSync('./private/certificate.crt')
-//   };
+const options = {
+    key: fs.readFileSync('./private/private.key'),
+    cert: fs.readFileSync('./private/certificate.crt')
+  };
 
-const server = http.createServer(app);
+const server = https.createServer(options,app);
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
