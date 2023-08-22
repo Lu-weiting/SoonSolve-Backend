@@ -46,7 +46,7 @@ app.get('/api/1.0/', (req, res) => {
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://52.64.240.159:80",
+        origin: "*",
         credentials: true
     },
 });
