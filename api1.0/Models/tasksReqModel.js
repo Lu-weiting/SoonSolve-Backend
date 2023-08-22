@@ -118,6 +118,17 @@ module.exports = {
               output
             }
           }
+          const taskQuery = 
+          `
+          SELECT tasks.poster_id, user_task.taker_id
+          FROM user_task
+          INNER JOIN tasks ON user_task.task_id = tasks.id
+          WHERE user_task.id = ?;
+          `;
+          const [task] = await connection.execute(taskQuery, [user_taskId]);
+          const type = 'task_reqAccept'
+          const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+          await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
           return data;
         } catch (error) {
           errorMsg.query(res);

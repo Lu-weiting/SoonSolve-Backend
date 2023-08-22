@@ -275,7 +275,7 @@ module.exports = {
   createComment: async(res,content,task_poster_id,userId)=>{
     const connection = await connectionPromise;
     try {
-      const [insertResult]=await connection.execute('INSERT INTO comments (content,user_id,poster_id) VALUES (?,?,?)', [content,task_poster_id, userId]);
+      const [insertResult] = await connection.execute('INSERT INTO comments (content,user_id,poster_id) VALUES (?,?,?)', [content,task_poster_id, userId]);
 
       const data = {
         data: {
@@ -287,6 +287,9 @@ module.exports = {
           }
         }
       };
+      const type = 'comment'
+      const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+      await connection.execute(eventQuery, [userId, task_poster_id, type, false]);
       return data;
     } 
     catch (error) {
