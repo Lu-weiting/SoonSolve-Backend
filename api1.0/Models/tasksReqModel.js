@@ -130,7 +130,7 @@ module.exports = {
             const type = 'task_reqAccept'
             const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
             await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
-            await connection.execute(`UPDAT tasks SET approved_count = approved_count + ${task[0].ask_count} WHERE id = ?`, [task[0].taskId]);
+            await connection.execute(`UPDATE tasks SET approved_count = approved_count + ${task[0].ask_count} WHERE id = ?`, [task[0].taskId]);
           }
           return data;
         } catch (error) {
