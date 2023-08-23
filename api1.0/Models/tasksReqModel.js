@@ -126,6 +126,7 @@ module.exports = {
             WHERE user_task.id = ?;
             `;
             const [task] = await connection.execute(taskQuery, [user_taskId]);
+            console.log(task);
             const type = 'task_reqAccept'
             const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
             await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
@@ -134,6 +135,7 @@ module.exports = {
           return data;
         } catch (error) {
           errorMsg.query(res);
+          console.log(error);
         } finally {
           console.log('connection release');
         }
