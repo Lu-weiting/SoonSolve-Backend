@@ -1,5 +1,5 @@
 const moment = require('moment');
-const connectionPromise = require('./utils/database').connectionPromise;
+const connectionPromise = require('./database').connectionPromise;
 async function formatMessage(id, username, text) {
     const connection = await connectionPromise;
     try {
