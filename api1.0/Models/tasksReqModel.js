@@ -117,17 +117,20 @@ module.exports = {
               output
             }
           }
-          const taskQuery = 
-          `
-          SELECT tasks.poster_id, user_task.taker_id
-          FROM user_task
-          INNER JOIN tasks ON user_task.task_id = tasks.id
-          WHERE user_task.id = ?;
-          `;
-          const [task] = await connection.execute(taskQuery, [user_taskId]);
-          const type = 'task_reqAccept'
-          const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
-          await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
+          if(status === 'Accepted'){
+            const taskQuery = 
+            `
+            SELECT tasks.poster_id, user_task.taker_id, user_task.ask_count, tasks.id AS taskId
+            FROM user_task
+            INNER JOIN tasks ON user_task.task_id = tasks.id
+            WHERE user_task.id = ?;
+            `;
+            const [task] = await connection.execute(taskQuery, [user_taskId]);
+            const type = 'task_reqAccept'
+            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+            await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
+            await connection.execute(`UPDAT tasks SET approved_count = approved_count + ${task[0].ask_count} WHERE id = ?`, [task[0].taskId]);
+          }
           return data;
         } catch (error) {
           errorMsg.query(res);
