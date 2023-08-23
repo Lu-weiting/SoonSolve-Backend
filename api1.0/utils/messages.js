@@ -3,7 +3,7 @@ const moment = require('moment');
 function formatMessage(id, picture, username, text) {
     console.log(id);
     // console.log(selectResult[0].picture);
-    console.log(selectResult);
+    // console.log(selectResult);
     return {
         sender_id: {
             id: id,
