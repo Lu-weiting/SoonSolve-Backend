@@ -8,7 +8,7 @@ router.post('/:task_id/request', auth.verifyToken, tasksReqController.sendReques
 router.delete('/:user_task_id', auth.verifyToken, tasksReqController.deleteRequest);
 
 // User get search tasks API
-router.get('/',auth.verifyToken,tasksReqController.getTaskReqList);
+router.get('/:task_id',auth.verifyToken,tasksReqController.getTaskReqList);
 
 // User get search tasks API
 router.put('/update/:status/:user_task_id',auth.verifyToken,tasksReqController.updateTaskReq);

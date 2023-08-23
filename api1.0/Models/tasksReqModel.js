@@ -50,7 +50,7 @@ module.exports = {
             console.log('connection release');
         }
     },
-    getTaskReqList: async (res, userId, cursor, limit) => {
+    getTaskReqList: async (res, userId, cursor, limit, task_id) => {
         const connection = await connectionPromise;
         let decodeCuser = null;
         try {
@@ -65,11 +65,11 @@ module.exports = {
             FROM user_task ut 
             LEFT JOIN tasks t ON t.id = ut.task_id
             LEFT JOIN users u ON ut.taker_id = u.id
-            WHERE t.poster_id = ?
+            WHERE t.id = ?
             ORDER BY t.id DESC LIMIT ${limit}
             `;
 
-            const [results] = await connection.execute(query, [userId]);
+            const [results] = await connection.execute(query, [task_id]);
             if (results.length == 0) {
                 return errorMsg.taskReqNotExist(res);
               } else if (results.length < limit) {
