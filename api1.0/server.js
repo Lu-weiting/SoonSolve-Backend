@@ -84,8 +84,12 @@ io.on("connection", (socket) => {
         console.log("join success");
         const connection = await connectionPromise;
         try {
-            const sql1 = "INSERT INTO rooms (id) VALUES (?)";
-            const [insertChat1] = await connection.execute(sql1, [user.room]);
+            const sql = "SELECT * FROM rooms WHERE id = ?"
+            const [selectResult] = await connection.execute(sql, [user.room]);
+            if(selectResult.length==0){
+                const sql1 = "INSERT INTO rooms (id) VALUES (?)";
+                const [insertChat1] = await connection.execute(sql1, [user.room]);
+            }
         } catch (error) {
             console.log(error);
         } finally {
