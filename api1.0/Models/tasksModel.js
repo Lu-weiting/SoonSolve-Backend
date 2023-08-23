@@ -10,8 +10,20 @@ module.exports = {
     createTask: async (res, userId, context) => {
         const connection = await connectionPromise;
         try {
+            const target = [
+                {x_axis: -2.0, y_axis: 3.0, location: '醉月湖'},
+                {x_axis: -6.0, y_axis: 5.0, location: '綜合體育館'},
+                {x_axis: -5.0, y_axis: 1.0, location: '舊總圖書館'},
+                {x_axis: -2.0, y_axis: -3.0, location: '行政大樓'},
+                {x_axis: -6.0, y_axis: -4.0, location: '女三舍'},
+                {x_axis: 1.0, y_axis: 3.0, location: '女九舍'},
+                {x_axis: 2.5, y_axis: -2.0, location: '總圖書館'},
+                {x_axis: 9.0, y_axis: -2.0, location: '男八舍'},
+                {x_axis: 9.0, y_axis: -4.0, location: '男三舍'},
+              ];
             const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
+
             const response = {
                 data: {
                     task: {
