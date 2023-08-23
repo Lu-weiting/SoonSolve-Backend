@@ -5,7 +5,7 @@ async function formatMessage(id, username, text) {
     try {
         const [selectResult] = connection.execute('SELECT * FROM users WHERE id = ?',[id]);
         console.log(id);
-        console.log(selectResult[0].picture);
+        // console.log(selectResult[0].picture);
         console.log(selectResult);
         return {
             sender_id: {
