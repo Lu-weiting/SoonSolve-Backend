@@ -92,10 +92,13 @@ io.on("connection", (socket) => {
     });
     socket.on("newMessage", async(msg) => {
         const user = getCurrentUser(socket.id);
-        io.to(user.room).emit("message", await formatMessage(decoded.id,user.username, msg.message));
         const connection = await connectionPromise;
         try {
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
+            const sql3 = "SELECT * FROM users WHERE id = ?"
+            const [pictureResult] = await connection.execute(sql3,[decoded.id])
+            io.to(user.room).emit("message", formatMessage(pictureResult[0].picture,decoded.id,user.username, msg.message));
+
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
