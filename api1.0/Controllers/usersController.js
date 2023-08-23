@@ -53,7 +53,8 @@ module.exports = {
         'data': {
           'access_token': auth.generateJWTToken(user.id),
           "user": {
-            'id': user.id
+            'id': user.id,
+            'name': user.name
           }
         }
       };

@@ -32,8 +32,9 @@ module.exports = {
         try {
           const userId = req.decodedToken.id;
           const cursor = req.query.cursor;
+          const task_id = Number(req.params.task_id);
           let limit = 10;
-          const result = await tasksReqModel.getTaskReqList(res, userId, cursor ? cursor : null, limit);
+          const result = await tasksReqModel.getTaskReqList(res, userId, cursor ? cursor : null, limit, task_id);
           return res.status(200).json(result);
         } catch (error) {
           console.error(error);
@@ -44,7 +45,7 @@ module.exports = {
       try {
         const status = req.params.status;
         const user_taskId = Number(req.params.user_task_id);
-        if (status != 'Accepted' && type != 'Finished') return errorMsg.inputEmpty(res);
+        if (status != 'Accepted' && status != 'Finished') return errorMsg.inputEmpty(res);
         const result = await tasksReqModel.updateTaskReq(res, status, user_taskId);
         res.status(200).json(result);
       } catch (error) {

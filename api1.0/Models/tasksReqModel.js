@@ -50,7 +50,7 @@ module.exports = {
             console.log('connection release');
         }
     },
-    getTaskReqList: async (res, userId, cursor, limit) => {
+    getTaskReqList: async (res, userId, cursor, limit, task_id) => {
         const connection = await connectionPromise;
         let decodeCuser = null;
         try {
@@ -65,11 +65,11 @@ module.exports = {
             FROM user_task ut 
             LEFT JOIN tasks t ON t.id = ut.task_id
             LEFT JOIN users u ON ut.taker_id = u.id
-            WHERE t.poster_id = ?
+            WHERE t.id = ?
             ORDER BY t.id DESC LIMIT ${limit}
             `;
 
-            const [results] = await connection.execute(query, [userId]);
+            const [results] = await connection.execute(query, [task_id]);
             if (results.length == 0) {
                 return errorMsg.taskReqNotExist(res);
               } else if (results.length < limit) {
@@ -117,20 +117,25 @@ module.exports = {
               output
             }
           }
-          const taskQuery = 
-          `
-          SELECT tasks.poster_id, user_task.taker_id
-          FROM user_task
-          INNER JOIN tasks ON user_task.task_id = tasks.id
-          WHERE user_task.id = ?;
-          `;
-          const [task] = await connection.execute(taskQuery, [user_taskId]);
-          const type = 'task_reqAccept'
-          const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
-          await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
+          if(status === 'Accepted'){
+            const taskQuery = 
+            `
+            SELECT tasks.poster_id, user_task.taker_id, user_task.ask_count, tasks.id AS taskId
+            FROM user_task
+            INNER JOIN tasks ON user_task.task_id = tasks.id
+            WHERE user_task.id = ?;
+            `;
+            const [task] = await connection.execute(taskQuery, [user_taskId]);
+            console.log(task);
+            const type = 'task_reqAccept'
+            const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
+            await connection.execute(eventQuery, [task[0].taker_id, task[0].poster_id, type, false]);
+            await connection.execute(`UPDATE tasks SET approved_count = approved_count + ${task[0].ask_count} WHERE id = ?`, [task[0].taskId]);
+          }
           return data;
         } catch (error) {
           errorMsg.query(res);
+          console.error(error);
         } finally {
           console.log('connection release');
         }
