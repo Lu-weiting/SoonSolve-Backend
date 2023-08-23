@@ -24,8 +24,8 @@ module.exports = {
             ];
             const foundObject = target.find(obj => obj.location === context.location);
 
-            const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-            const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
+            const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id, x_axis, y_axis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId, foundObject.x_axis, foundObject.y_axis]) ;
 
             const response = {
                 data: {
@@ -304,6 +304,7 @@ module.exports = {
                         nickname: result[0].nickname,
                         picture: result[0].picture,
                         status: result[0].status,
+                        user_task: taskReqResults
                     }
                 }
             };
