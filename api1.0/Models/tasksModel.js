@@ -279,7 +279,7 @@ module.exports = {
                         poster_id: result[0].poster_id,
                         created_at: moment.utc(result[0].created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
                         closed_at: moment.utc(result[0].closed_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
-                        deadline: moment.utc(result[i].deadline).format('YYYY-MM-DD HH:mm:ss'),
+                        deadline: moment.utc(result[0].deadline).format('YYYY-MM-DD HH:mm:ss'),
                         task_vacancy: result[0].task_vacancy,
                         approved_count: result[0].approved_count,
                         location: result[0].location,
