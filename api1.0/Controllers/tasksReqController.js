@@ -32,8 +32,9 @@ module.exports = {
         try {
           const userId = req.decodedToken.id;
           const cursor = req.query.cursor;
+          const task_id = Number(req.params.task_id);
           let limit = 10;
-          const result = await tasksReqModel.getTaskReqList(res, userId, cursor ? cursor : null, limit);
+          const result = await tasksReqModel.getTaskReqList(res, userId, cursor ? cursor : null, limit, task_id);
           return res.status(200).json(result);
         } catch (error) {
           console.error(error);
