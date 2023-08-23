@@ -7,6 +7,7 @@ module.exports = {
   getMessage: async (req, res) => {
     try{
         const roomId = Number(req.params.room_id);
+        console.log(roomId+"!!");
         const result = await chatModel.getMessage(res, roomId);
         return res.json(result);
     }
