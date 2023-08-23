@@ -40,6 +40,7 @@ module.exports = {
     }
     catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } 
     finally {
       console.log('connection release');
@@ -59,6 +60,7 @@ module.exports = {
     }
     catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } 
     finally {
       console.log('connection release');

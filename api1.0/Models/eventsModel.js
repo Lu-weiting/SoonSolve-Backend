@@ -30,6 +30,7 @@ module.exports = {
     }
     catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } 
     finally {
       console.log('connection release');
@@ -40,11 +41,11 @@ module.exports = {
       const connection = await connectionPromise;
       const readQuery = 'UPDATE events SET is_read = TRUE WHERE id = ?';
       const [event] = await connection.execute(readQuery, [event_id]);
-      console.log(event);
       return event;
     }
     catch (error) {
       errorMsg.query(res);
+      console.error(error);
     } 
     finally {
       console.log('connection release');

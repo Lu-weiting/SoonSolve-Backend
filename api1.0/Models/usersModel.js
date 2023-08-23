@@ -240,7 +240,6 @@ module.exports = {
       const pictureUrl = `${baseUrl}/static/${filename}`;
       console.log(`${pictureUrl}!~~`);
       await connection.execute('UPDATE users SET picture = ? WHERE id = ?', [pictureUrl, my_id]);
-      console.log('update~~');
       const data = {
         data:
         {
