@@ -27,6 +27,7 @@ const tasksReqRouter = require('./Routers/tasksReqRouter');
 const eventsRouter = require('./Routers/eventsRouter')
 const friendsRouter = require('./Routers/friendsRouter');
 const chatRouter = require('./Routers/chatRouter');
+const mapRouter = require('./Routers/mapRouter');
 
 app.use('/api/1.0/users', usersRouter);
 app.use('/api/1.0/tasks', tasksRouter);
@@ -34,6 +35,7 @@ app.use('/api/1.0/task_req', tasksReqRouter);
 app.use('/api/1.0/friends', friendsRouter);
 app.use('/api/1.0/events', eventsRouter);
 app.use('/api/1.0/chat', chatRouter);
+app.use('/api/1.0/map', mapRouter);
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
