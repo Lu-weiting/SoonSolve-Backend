@@ -13,6 +13,7 @@ module.exports = {
     getMessage: async (res, roomId) => {
     try{
       const connection = await connectionPromise;
+      console.log(roomId);
       const query = 
       `
       SELECT *
