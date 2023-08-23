@@ -13,13 +13,15 @@ module.exports = {
     getMessage: async (res, roomId) => {
     try{
       const connection = await connectionPromise;
-      const query = `
+      const query = 
+      `
       SELECT *
       FROM messages
       WHERE room_id = ?
       ORDER BY created_at DESC;
       `;
       const [results] = await connection.execute(query, [roomId]);
+      console.log(results);
       const promises = results.map(async messagesResult => {
         const messages = {
           id: messagesResult.id,
