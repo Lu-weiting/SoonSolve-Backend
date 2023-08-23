@@ -13,11 +13,20 @@ module.exports = {
     getMessage: async (res, roomId) => {
     try{
       const connection = await connectionPromise;
-      console.log(roomId);
-      const query = 
-      `
-      SELECT *
-      FROM messages
+      const query = `
+      SELECT 
+        m.id,
+        m.message,
+        m.created_at,
+        u.id AS sender_id,
+        u.name AS sender_name,
+        u.picture AS sender_picture,
+        r.id AS receiver_id,
+        r.name AS receiver_name,
+        r.picture AS receiver_picture
+      FROM messages m
+      LEFT JOIN users u ON m.sender_id = u.id
+      LEFT JOIN users r ON m.receiver_id = r.id
       WHERE room_id = ?
       ORDER BY created_at DESC;
       `;
@@ -27,8 +36,16 @@ module.exports = {
         const messages = {
           id: messagesResult.id,
           message: messagesResult.message,
-          sender_id: messagesResult.sender_id,
-          receiver_id: messagesResult.receiver_id,
+          sender_id: {
+            id: messagesResult.sender_id,
+            name: messagesResult.sender_name,
+            picture: messagesResult.sender_picture
+          },
+          receiver_id: {
+            id: messagesResult.receiver_id,
+            name: messagesResult.receiver_name,
+            picture: messagesResult.receiver_picture
+          },
           created_at: moment.utc(messagesResult.created_at).tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss'),
         };
         return messages;
