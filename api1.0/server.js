@@ -62,7 +62,6 @@ io.use((socket, next) => {
       }
       try {
         const accessToken = token.split(' ')[1];
-        // 'WeShare' 之後要移去.env
         const decoded = jwt.verify(accessToken, process.env.SECRET);
         console.log("Decoded:",decoded)
         next();
@@ -95,7 +94,6 @@ io.on("connection", (socket) => {
         } finally {
             console.log('connection release');
         }
-
     });
     socket.on("newMessage", async(msg) => {
         const user = getCurrentUser(socket.id);
