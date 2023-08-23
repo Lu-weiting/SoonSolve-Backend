@@ -1,8 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
-const path = require('path');
-const fs = require('fs');
 const jwt = require('jsonwebtoken');
 // 
 // const socketio = require("socket.io");
@@ -14,7 +12,6 @@ const {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers,
 } = require("./utils/users");
 
 const app = express();
@@ -41,10 +38,7 @@ app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
 
-const options = {
-    key: fs.readFileSync('./private/private.key'),
-    cert: fs.readFileSync('./private/certificate.crt')
-  };
+
 const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
@@ -87,7 +81,7 @@ io.on("connection", (socket) => {
             const [selectResult] = await connection.execute(sql, [user.room]);
             if(selectResult.length==0){
                 const sql1 = "INSERT INTO rooms (id) VALUES (?)";
-                const [insertChat1] = await connection.execute(sql1, [user.room]);
+                await connection.execute(sql1, [user.room]);
             }
         } catch (error) {
             console.log(error);
@@ -102,7 +96,7 @@ io.on("connection", (socket) => {
         try {
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
-            const [insertChat2] = await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
+            await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
             console.log(error);
         } finally {
