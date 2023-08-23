@@ -22,7 +22,8 @@ module.exports = {
                 {x_axis: 9.0, y_axis: -4.0, location: '男三舍'},
                 {x_axis: 12.0, y_axis: -6.0, location: '男七舍'}
             ];
-            
+            const foundObject = target.find(obj => obj.location === context.location);
+
             const query = 'INSERT INTO tasks (title, content, deadline, task_vacancy, location, reward, status, poster_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             const [result] = await connection.execute(query, [context.title, context.content, context.deadline, context.task_vacancy, context.location, context.reward, "pending", userId]) ;
 

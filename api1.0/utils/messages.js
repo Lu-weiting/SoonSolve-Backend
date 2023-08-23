@@ -1,15 +1,26 @@
 const moment = require('moment');
-
-function formatMessage(id, username, text) {
-    console.log(id);
-  return {
-    sender_id: {
-        id: id
-    },
-    username,
-    message: text,
-    time: moment().format('h:mm a')
-  };
+const connectionPromise = require('./utils/database').connectionPromise;
+async function formatMessage(id, username, text) {
+    const connection = await connectionPromise;
+    try {
+        const [selectResult] = connection.execute('SELECT * FROM users WHERE id = ?',[id]);
+        console.log(id);
+        return {
+            sender_id: {
+                id: id,
+                picture: selectResult[0].picture
+            },
+            username,
+            message: text,
+            time: moment().format('h:mm a')
+        };
+    } catch (error) {
+        console.log(error);
+    } finally {
+        console.log('connection release');
+    }
+    
+  
 }
 
 module.exports = formatMessage;
