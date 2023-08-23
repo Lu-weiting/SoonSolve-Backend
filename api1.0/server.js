@@ -76,6 +76,7 @@ io.on("connection", (socket) => {
         socket.join(user.room);
         console.log("join success");
         const connection = await connectionPromise;
+
         try {
             const sql = "SELECT * FROM rooms WHERE id = ?"
             const [selectResult] = await connection.execute(sql, [user.room]);
@@ -91,7 +92,7 @@ io.on("connection", (socket) => {
     });
     socket.on("newMessage", async(msg) => {
         const user = getCurrentUser(socket.id);
-        io.to(user.room).emit("message", formatMessage(user.username, msg.message));
+        io.to(user.room).emit("message", formatMessage(decoded.id,user.username, msg.message));
         const connection = await connectionPromise;
         try {
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
