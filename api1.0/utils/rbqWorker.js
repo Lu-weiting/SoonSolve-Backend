@@ -5,8 +5,11 @@ dotenv.config()
 
 module.exports = {
     startWorker: async ()=>{
+        console.log("rabbit start~");
         const connection = await amqp.connect('amqp://52.64.240.159'); // RabbitMQ 連接設定
+        console.log("rabbit connection success~");
         const channel = await connection.createChannel();
+        console.log("rabbit create channel success~");
       
         const queue = 'mail_queue';
         await channel.assertQueue(queue, { durable: true });
