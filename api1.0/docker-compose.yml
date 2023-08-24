@@ -2,6 +2,16 @@ version: '3.8'
 
 services:
 
+  soonsolve:
+      build: 
+        context: .
+        dockerfile: Dockerfile
+      container_name: ss_container
+      volumes:
+        - userImage:/soonsolve/static
+      networks:
+        - ss_network
+
   # redis:
   #   # image: redis:6.0.16
   #   # container_name: redis
@@ -22,6 +32,11 @@ services:
       - ./private/private.key:/etc/ssl/private.key  # 替換為 SSL 私鑰的路徑
     networks:
       - ss_network  
+    depends_on:
+      - soonsolve
+
+volumes:
+  userImage:
 
 networks:
   ss_network:   

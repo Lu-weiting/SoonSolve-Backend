@@ -1,14 +1,56 @@
 module.exports = {
-    inputempty: (res) => {
-        res.status(400).json({ error: 'Client error - input feild should not be empty' });
+    inputEmpty: (res) => {
+        res.status(400).json({ error: 'Client error - Input feild should not be empty' });
+    },
+    wrongEmail: (res) => {
+        res.status(400).json({ error: 'Client error - Invalid email address.' });
+    },
+    duplicateEmail: (res) => {
+        res.status(400).json({ error: 'Client error - It should not be possible to register with a duplicate email.' })
     },
     taskNotExist: (res) => {
-        res.status(400).json({ error: 'Post is not exist' });
+        res.status(400).json({ error: 'Client error - Task is not exist' });
     },
-    dbConnection: (res) => {
-        res.status(500).json({ error: 'Server error - connecting to db failed' });
+    taskReqNotExist: (res) => {
+        res.status(400).json({ error: 'Client error - Task request is not exist' });
+    },
+    wronginput: (res) => {
+        res.status(400).json({ error: 'Input must be pending / processing / commenting / finished' });
+    },
+    noToken: (res) => {
+        res.status(401).json({ error: 'Client error - No token provided' });
+    },
+    noUser: (res) => {
+        res.status(403).json({ error: 'Client error - User Not Found' })
+    },
+    wrongPassword: (res) => {
+        res.status(403).json({ error: 'Client error - Wrong Password' });
+    },
+    wrongToken: (res) => {
+        res.status(403).json({ error: 'Client error - Invalid token' });
+    },
+    controllerProblem: (res) => {
+        res.status(500).json({ error: 'Server error - Controller problem' });
+    },
+    queryFailed: (res) => {
+        res.status(500).json({ error: 'Server error - Query failed' });
+    },
+    userNotFound: (res) =>{
+        res.status(400).json({ error: 'user not found' });
+    },
+    friendshipNotFound: (res) =>{
+        res.status(400).json({ error: 'friendship not found' });
+    },
+    cannotUpdateTask: (res) =>{
+        res.status(400).json({ error: 'cannotUpdateTask' });
+    },
+    contentType: (res) => {
+        res.status(400).json({ error: 'Content type is not correct' });
     },
     query: (res) => {
         res.status(500).json({ error: 'Server error - query failed' });
+    },
+    dbConnection: (res) => {
+        res.status(500).json({ error: 'Server error - connecting to db failed' });
     }
 }
