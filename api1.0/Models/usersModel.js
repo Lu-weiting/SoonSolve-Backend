@@ -97,6 +97,7 @@ module.exports = {
         `
         SELECT ut.status,
           t.id,
+          t.title,
           t.poster_id,
           t.created_at,
           t.closed_at,
