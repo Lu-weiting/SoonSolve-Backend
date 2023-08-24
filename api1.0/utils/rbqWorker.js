@@ -18,7 +18,7 @@ module.exports = {
         await channel.assertQueue(queue, { durable: true });
       
         console.log('Mail worker is waiting for tasks...');
-      //
+      
         // 監聽佇列，處理郵件發送任務
         channel.consume(queue, async(msg) => {
           console.log(msg.content.toString());
