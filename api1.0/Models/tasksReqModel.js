@@ -32,8 +32,18 @@ module.exports = {
     deleteRequest: async(res,user_taskId)=>{
         const connection = await connectionPromise;
         try {
+            const taskQuery = 
+            `
+            SELECT tasks.poster_id, user_task.taker_id, user_task.ask_count, tasks.id AS taskId
+            FROM user_task
+            INNER JOIN tasks ON user_task.task_id = tasks.id
+            WHERE user_task.id = ?;
+            `;
+            const [task] = await connection.execute(taskQuery, [user_taskId]);
+            await connection.execute(`UPDATE tasks SET approved_count = approved_count - ${task[0].ask_count} WHERE id = ?`, [task[0].taskId]);
             const deleted = await connection.execute('DELETE FROM user_task WHERE id = ?',[user_taskId]);
             if(deleted.affectedRows === 0) return errorMsg.taskNotExist(res);
+            
             const data = {
                 data:
                 {
