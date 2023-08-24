@@ -67,9 +67,9 @@ app.get('/api/1.0/', (req, res) => {
 
 
 const server = http.createServer(app);
-console.log("call start head");
-rbq.startWorker();
-console.log("start fail");
+// console.log("call start head");
+// rbq.startWorker();
+// console.log("start fail");
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
                 subject: 'Soon Solve', // 郵件主題
                 text: `You got a new message from ${pictureResult[0].name}` // 郵件內容
             };
-            mailer.enqueueMail(mailOptions).catch(console.error);
+            // mailer.enqueueMail(mailOptions).catch(console.error);
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
