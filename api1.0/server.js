@@ -8,23 +8,23 @@ const nodemailer = require('nodemailer');
 const rbq = require('./utils/rbqWorker');
 const mailer = require('./utils/mail');
 
-const token = 'MTE0NDA4MzM0MzkyMzc0MDc4Mw.GTq7OX.O0MRVD_HBBKe6NTDhF5k5h_T_scMPQN7Sq3opA'; // 替換成您的 Bot 令牌
-const guildId = '1144086033504423996'; // 您的伺服器 ID
-const channelId = '1144089064971194408'; // 您想要發送訊息的頻道 ID
+// const token = 'MTE0NDA4MzM0MzkyMzc0MDc4Mw.GTq7OX.O0MRVD_HBBKe6NTDhF5k5h_T_scMPQN7Sq3opA'; // 替換成您的 Bot 令牌
+// const guildId = '1144086033504423996'; // 您的伺服器 ID
+// const channelId = '1144089064971194408'; // 您想要發送訊息的頻道 ID
 
-const headers = {
-  Authorization: `Bot ${token}`,
-};
-const apiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
-const messageContent = 'Hello from my Discord bot!'; // 您想要發送的訊息內容
+// const headers = {
+//   Authorization: `Bot ${token}`,
+// };
+// const apiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
+// const messageContent = 'Hello from my Discord bot!'; // 您想要發送的訊息內容
 
-axios.post(apiUrl, { content: messageContent }, { headers })
-.then(response => {
-console.log('Message sent:', response.data);
-})
-.catch(error => {
-console.error('Error sending message:', error.message);
-});
+// axios.post(apiUrl, { content: messageContent }, { headers })
+// .then(response => {
+// console.log('Message sent:', response.data);
+// })
+// .catch(error => {
+// console.error('Error sending message:', error.message);
+// });
 
 
 
