@@ -2,8 +2,27 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const jwt = require('jsonwebtoken');
-// 
-// const socketio = require("socket.io");
+const axios = require('axios');
+
+
+const token = 'MTE0NDA4MzM0MzkyMzc0MDc4Mw.GWpi8p.FFvH_ce4V7QATa4SjW3fecj2cGKY_5W8Eg8zB0'; // 替換成您的 Bot 令牌
+const guildId = '1144086033504423996'; // 您的伺服器 ID
+const channelId = '1144089064971194408'; // 您想要發送訊息的頻道 ID
+
+const headers = {
+  Authorization: `Bot ${token}`,
+};
+const apiUrl = `https://discord.com/api/v10/guilds/${guildId}/channels/${channelId}/messages`;
+const messageContent = 'Hello from my Discord bot!'; // 您想要發送的訊息內容
+
+axios.post(apiUrl, { content: messageContent }, { headers })
+.then(response => {
+console.log('Message sent:', response.data);
+})
+.catch(error => {
+console.error('Error sending message:', error.message);
+});
+
 const formatMessage = require("./utils/messages");
 const connectionPromise = require('./utils/database').connectionPromise;
 const dotenv = require('dotenv');
