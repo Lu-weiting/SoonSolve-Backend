@@ -161,7 +161,7 @@ module.exports = {
                         next_cursor: next_cursor
                     }
                 };
-                return output;
+                return output ;
             }
             const selected = [null, null, null, null];
             const matched = [false, false, false, false];
