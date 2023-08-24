@@ -155,9 +155,9 @@ module.exports = {
                     next_cursor = await tool.encryptCursor(cusr);
                     next_cursor = encodeURIComponent(next_cursor);
                 }
-                const output = {
+                const output2 = {
                     data: {
-                        tasks: finalData,
+                        tasks: data,
                         next_cursor: next_cursor
                     }
                 };
