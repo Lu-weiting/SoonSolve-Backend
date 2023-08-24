@@ -3,7 +3,10 @@ const cors = require('cors');
 const http = require('http');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-
+const amqp = require('amqplib');
+const nodemailer = require('nodemailer');
+const rbq = require('./utils/rbqWorker');
+const mailer = require('./utils/mail');
 
 const token = 'MTE0NDA4MzM0MzkyMzc0MDc4Mw.GTq7OX.O0MRVD_HBBKe6NTDhF5k5h_T_scMPQN7Sq3opA'; // 替換成您的 Bot 令牌
 const guildId = '1144086033504423996'; // 您的伺服器 ID
@@ -23,10 +26,13 @@ console.log('Message sent:', response.data);
 console.error('Error sending message:', error.message);
 });
 
+
+
 const formatMessage = require("./utils/messages");
 const connectionPromise = require('./utils/database').connectionPromise;
 const dotenv = require('dotenv');
 dotenv.config();
+
 const {
     userJoin,
     getCurrentUser,
@@ -61,7 +67,7 @@ app.get('/api/1.0/', (req, res) => {
 
 
 const server = http.createServer(app);
-
+rbq.startWorker.catch(console.error);
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
@@ -119,7 +125,15 @@ io.on("connection", (socket) => {
             const sql3 = "SELECT * FROM users WHERE id = ?"
             const [pictureResult] = await connection.execute(sql3,[decoded.id])
             io.to(user.room).emit("message", formatMessage(decoded.id,pictureResult[0].picture,user.username, msg.message));
-
+            console.log(pictureResult[0].email);
+            console.log(pictureResult[0].name);
+            const mailOptions = {
+                from: 'howard369369@gmail.com', // 使用你的 Gmail 帳號
+                to: pictureResult[0].email, // 收件人
+                subject: 'Soon Solve', // 郵件主題
+                text: `You got a new message from ${pictureResult[0].name}` // 郵件內容
+            };
+            mailer.enqueueMail(mailOptions).catch(console.error);
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
