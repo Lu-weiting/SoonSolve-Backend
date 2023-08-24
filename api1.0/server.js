@@ -68,7 +68,7 @@ app.get('/api/1.0/', (req, res) => {
 
 const server = http.createServer(app);
 console.log("call start head");
-rbq.startWorker.catch(console.error);
+rbq.startWorker();
 console.log("start fail");
 const io = require("socket.io")(server, {
     cors: {
