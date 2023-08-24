@@ -42,11 +42,11 @@ module.exports = {
             console.log('connection release');
         }
     },
-    deletetask: async (res, taskId, userId) => {
+    deletetask: async (res, taskId) => {
         const connection = await connectionPromise;
         try {
-            const query = 'DELETE FROM tasks WHERE id = ? AND poster_id = ?';
-            const result = await connection.execute(query, [taskId, userId]) ;
+            const query = 'DELETE FROM tasks WHERE id = ?';
+            const result = await connection.execute(query, [taskId]) ;
             if (result.affectedRows > 0){
                 const response = {
                     data: {
