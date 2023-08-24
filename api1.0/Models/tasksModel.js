@@ -148,16 +148,20 @@ module.exports = {
                         data.push(post);
                     }
                 }
-                const cusr = String(result[result.length - 2].id);
-                let next_cursor = await tool.encryptCursor(cusr);
-                next_cursor = encodeURIComponent(next_cursor);
+                const cusr= result.length < limit ? null : String(result[result.length - 2].id);
+                // const cusr = String(result[result.length - 2].id);
+                let next_cursor = null;
+                if(cusr != null){
+                    next_cursor = await tool.encryptCursor(cusr);
+                    next_cursor = encodeURIComponent(next_cursor);
+                }
                 const output = {
                     data: {
                         tasks: data,
-                        next_cursor: result.length < limit ? null : next_cursor
+                        next_cursor: next_cursor
                     }
-                }
-                return output;
+                };
+                return output ;
             }
             const selected = [null, null, null, null];
             const matched = [false, false, false, false];
