@@ -12,7 +12,7 @@ const channelId = '1144089064971194408'; // 您想要發送訊息的頻道 ID
 const headers = {
   Authorization: `Bot ${token}`,
 };
-const apiUrl = `https://discord.com/api/v10/guilds/${guildId}/channels/${channelId}/messages`;
+const apiUrl = `https://discord.com/api/v10/channels/${channelId}/messages`;
 const messageContent = 'Hello from my Discord bot!'; // 您想要發送的訊息內容
 
 axios.post(apiUrl, { content: messageContent }, { headers })
