@@ -17,10 +17,10 @@ module.exports = {
         console.log('Mail worker is waiting for tasks...');
       
         // 監聽佇列，處理郵件發送任務
-        channel.consume(queue, (msg) => {
+        channel.consume(queue, async(msg) => {
           console.log(msg.content.toString());
           const mailOptions = JSON.parse(msg.content.toString());
-          sendMail(mailOptions)
+          await sendMail(mailOptions)
             .then(() => {
               console.log('Email sent:', mailOptions.to);
               channel.ack(msg); // 確認訊息已處理
@@ -38,8 +38,8 @@ module.exports = {
               user: 'howard369369@gmail.com', // 使用你的 Gmail 帳號
               pass: process.env.GP // 使用密碼或應用程式密碼
             }
-          });
-          await transporter.sendMail(mailOptions);
+        });
+        await transporter.sendMail(mailOptions);
     }
 
 }
