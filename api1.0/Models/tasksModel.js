@@ -148,6 +148,7 @@ module.exports = {
                         data.push(post);
                     }
                 }
+                //
                 const cusr= result.length < limit ? null : String(result[result.length - 2].id);
                 // const cusr = String(result[result.length - 2].id);
                 let next_cursor = null;
@@ -362,7 +363,7 @@ module.exports = {
             const updateQuery = 'UPDATE tasks SET status = ? WHERE id = ?';
             const [task] = await connection.execute(updateQuery, [status, taskId]);
             console.log(task);
-            if(task.changedRows === 0) return errorMsg.taskNotExist(res);
+
             const data = {
                 data: {
                     task: {
