@@ -29,7 +29,8 @@ services:
       RABBITMQ_DEFAULT_PASS: soonsolve
     # volumes:
     #   - rabbitMQ:/var/lib/rabbitmq/mnesia 
-
+    networks:
+      - ss_network  
   nginx:
     image: nginx:1.18.0
     container_name: nginx
