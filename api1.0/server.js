@@ -67,9 +67,9 @@ app.get('/api/1.0/', (req, res) => {
 
 
 const server = http.createServer(app);
-// console.log("call start head");
-// rbq.startWorker();
-// console.log("start fail");
+console.log("call start head");
+await rbq.startRabbitMq();
+console.log("start fail");
 const io = require("socket.io")(server, {
     cors: {
         origin: "*",
@@ -124,18 +124,29 @@ io.on("connection", (socket) => {
         const connection = await connectionPromise;
         try {
             const sql2 = "INSERT INTO messages (message, sender_id, receiver_id , room_id) VALUES (?, ?, ? ,?)";
+//             SELECT sender.email AS sender_email, 
+//                    sender.name AS sender_name,
+//                    sender.picture AS sender_picture,
+//                    receiver.email AS _email
+//             FROM users AS sender
+//             JOIN users AS receiver ON sender.id = ? AND receiver.id = ?
+
+
             const sql3 = "SELECT * FROM users WHERE id = ?"
             const [pictureResult] = await connection.execute(sql3,[decoded.id])
             io.to(user.room).emit("message", formatMessage(decoded.id,pictureResult[0].picture,user.username, msg.message));
             console.log(pictureResult[0].email);
             console.log(pictureResult[0].name);
+            const sql4= "SELECT * FROM users WHERE id = ?"
+            //msg contains receiver data
+            const [receiver] = await connection.execute(sql4,[msg.id]);
             const mailOptions = {
-                from: 'howard369369@gmail.com', // 使用你的 Gmail 帳號
-                to: pictureResult[0].email, // 收件人
-                subject: 'Soon Solve', // 郵件主題
-                text: `You got a new message from ${pictureResult[0].name}` // 郵件內容
+                from: 'howard369369@gmail.com', 
+                to: receiver[0].email,
+                subject: 'Soon Solve Message',
+                text: `You got a new message from ${pictureResult[0].name}`
             };
-            // mailer.enqueueMail(mailOptions).catch(console.error);
+            await mailer.enqueueMail(mailOptions).catch(console.error);
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {

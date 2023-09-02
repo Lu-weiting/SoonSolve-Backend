@@ -18,6 +18,17 @@ services:
   #   # restart: always
   #   # networks:
   #   #   - ss_network
+  rabbitmq:
+    image: "rabbitmq:latest"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # RabbitMQ 使用的通訊埠
+      - "15672:15672"  # RabbitMQ 管理界面的通訊埠
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: soonsolve
+    # volumes:
+    #   - rabbitMQ:/var/lib/rabbitmq/mnesia 
 
   nginx:
     image: nginx:1.18.0
@@ -37,6 +48,7 @@ services:
 
 volumes:
   userImage:
+  # rabbitMQ:
 
 networks:
   ss_network:   
