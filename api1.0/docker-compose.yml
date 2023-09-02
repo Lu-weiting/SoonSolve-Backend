@@ -21,7 +21,7 @@ services:
   #   # networks:
   #   #   - ss_network
   rabbitmq:
-    image: "rabbitmq:3.9.29-management-alpine"
+    image: "rabbitmq:latest"
     container_name: rabbitmq
     ports:
       - "5672:5672"  # RabbitMQ 使用的通訊埠
