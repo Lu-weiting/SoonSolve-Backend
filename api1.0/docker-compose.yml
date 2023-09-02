@@ -11,6 +11,8 @@ services:
         - userImage:/soonsolve/static
       networks:
         - ss_network
+      depends_on:
+        - rabbitmq
 
   # redis:
   #   # image: redis:6.0.16
