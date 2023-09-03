@@ -11,8 +11,8 @@ services:
         - userImage:/soonsolve/static
       networks:
         - ss_network
-      depends_on:
-        - rabbitmq
+      # depends_on:
+      #   - rabbitmq
 
   # redis:
   #   # image: redis:6.0.16
@@ -20,7 +20,7 @@ services:
   #   # restart: always
   #   # networks:
   #   #   - ss_network
-  
+
   rabbitmq:
     image: "rabbitmq:latest"
     container_name: rabbitmq
