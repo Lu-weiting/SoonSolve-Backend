@@ -3,7 +3,7 @@ const amqp = require('amqplib');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 dotenv.config()
-
+//
 module.exports = {
   startRabbitMq: async () => {
     const maxRetries = 10;
