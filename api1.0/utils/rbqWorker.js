@@ -25,7 +25,7 @@ module.exports = {
         channel.consume(queue, async (msg) => {
           console.log(msg.content.toString());
           const mailOptions = JSON.parse(msg.content.toString());
-          await sendMail(mailOptions)
+          await module.exports.sendMail(mailOptions)
             .then(() => {
               console.log('Email sent:', mailOptions.to);
               channel.ack(msg); // 確認訊息已處理
