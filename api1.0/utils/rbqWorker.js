@@ -7,8 +7,8 @@ dotenv.config()
 module.exports = {
   startRabbitMq: async () => {
     try {
-      console.log(`${process.env.RABBITUSER}//${process.env.RABBITPASSWORD}`);
-      const connection = await amqp.connect(`amqp://${process.env.RABBITUSER}:${process.env.RABBITPASSWORD}@rabbitmq:5672`);
+      console.log(`${process.env.RABBITMQ_DEFAULT_USER}//${process.env.RABBITMQ_DEFAULT_PASS}`);
+      const connection = await amqp.connect(`amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:5672`);
       console.log('connect sucess');
       const channel = await connection.createChannel();
       console.log('createChannel sucess');
