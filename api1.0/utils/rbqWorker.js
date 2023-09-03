@@ -49,10 +49,16 @@ module.exports = {
   sendMail: async (mailOptions) => {
     // 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: 'Gmail',
+      host: 'smtp.gmail.com', // SMTP服务器主机名
+      port: 587, // SMTP服务器端口号
+      secure: false, // 是否使用SSL或TLS
       auth: {
         user: 'howard369369@gmail.com',
         pass: process.env.GP
+      },tls:{
+        //不檢查伺服器
+        rejectUnauthorized: false
       }
     });
     await transporter.sendMail(mailOptions);
