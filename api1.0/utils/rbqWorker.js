@@ -11,8 +11,8 @@ module.exports = {
     let connection = null;
     while (retryCount < maxRetries) {
       try {
-        console.log(`${process.env.RABBITMQ_DEFAULT_USER}//${process.env.RABBITMQ_DEFAULT_PASS}`);
-        const connection = await amqp.connect(`amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@0.0.0.0:5672`);
+        console.log(`${process.env.RABBITMQ_DEFAULT_USER}//${process.env.RABBITMQ_DEFAULT_PASS}`);//192.168.0.2
+        const connection = await amqp.connect(`amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@rabbitmq:5672`);
         console.log('connect sucess');
         const channel = await connection.createChannel();
         console.log('createChannel sucess');
