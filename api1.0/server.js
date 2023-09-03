@@ -64,6 +64,16 @@ app.use('/api/1.0/map', mapRouter);
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
+app.get('/testMail', (req, res) => {
+    const mailOptions = {
+        from: 'howard369369@gmail.com', 
+        to: '110306033@g.nccu.edu.tw',
+        subject: 'Soon Solve Message',
+        text: `You got a new message from Howard`
+    };
+    mailer.enqueueMail(mailOptions).catch(console.error);
+    console.log('enqueue success!');
+});
 
 
 const server = http.createServer(app);
