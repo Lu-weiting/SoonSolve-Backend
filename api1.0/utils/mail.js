@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 module.exports = {
     enqueueMail: async (mailOptions) => {
-        const connection = await amqp.connect(`amqp://${process.env.RABBITUSER}:${process.env.RABBITPASSWORD}@rabbitmq`);
+        const connection = await amqp.connect(`amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@192.168.0.2`);
         const channel = await connection.createChannel();
 
         const queue = 'mail_queue';
