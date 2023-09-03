@@ -147,6 +147,7 @@ io.on("connection", (socket) => {
                 text: `You got a new message from ${pictureResult[0].name}`
             };
             await mailer.enqueueMail(mailOptions).catch(console.error);
+            console.log('enqueue success!');
             console.log(`${msg.message},${decoded.id},${msg.id},${user.room}`);
             await connection.execute(sql2, [msg.message, decoded.id, msg.id, user.room]);
         } catch (error) {
