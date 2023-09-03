@@ -47,6 +47,7 @@ module.exports = {
     }
   },
   sendMail: async (mailOptions) => {
+    // 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
