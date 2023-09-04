@@ -66,7 +66,7 @@ app.get('/api/1.0/', (req, res) => {
 });
 app.get('/testMail', (req, res) => {
     const mailOptions = {
-        from: 'howard369369@gmail.com', 
+        from: '110306003@g.nccu.edu.tw', 
         to: '110306033@g.nccu.edu.tw',
         subject: 'Soon Solve Message',
         text: `You got a new message from Howard`
