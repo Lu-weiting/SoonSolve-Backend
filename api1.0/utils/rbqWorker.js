@@ -54,8 +54,8 @@ module.exports = {
       port: 587, // SMTP服务器端口号
       secure: false, // 是否使用SSL或TLS
       auth: {
-        user: 'howard369369@gmail.com',
-        pass: process.env.GP
+        user: '110306003@g.nccu.edu.tw',
+        pass: 'gxtjohcbcamgguef'
       },tls:{
         //不檢查伺服器
         rejectUnauthorized: false
