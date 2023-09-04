@@ -73,6 +73,7 @@ app.get('/testMail', (req, res) => {
     };
     mailer.enqueueMail(mailOptions).catch(console.error);
     console.log('enqueue success!');
+    res.status(200).send("done");
 });
 
 
