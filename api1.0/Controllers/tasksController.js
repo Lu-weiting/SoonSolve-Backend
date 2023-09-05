@@ -40,7 +40,6 @@ module.exports = {
           console.log(my_id);
           const { location, friend, title, cursor, sex } = req.query;
           // const {redisClient} = req;
-          
           const result = await tasksModel.homeSearch(res,cursor ? cursor: null ,location ? location: null,friend ? Number(friend) : null,title ? title:null,sex ? Number(sex) : null,my_id);
           res.status(200).json(result);
         }

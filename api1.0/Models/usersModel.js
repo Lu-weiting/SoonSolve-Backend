@@ -237,7 +237,7 @@ module.exports = {
   pictureUpdate: async (res, my_id, filename) => {
     const connection = await connectionPromise;
     try {
-      const baseUrl = 'https://52.64.240.159';
+      const baseUrl = 'https://13.237.154.187';
       const pictureUrl = `${baseUrl}/static/${filename}`;
       console.log(`${pictureUrl}!~~`);
       await connection.execute('UPDATE users SET picture = ? WHERE id = ?', [pictureUrl, my_id]);
