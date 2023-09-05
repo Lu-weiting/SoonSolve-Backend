@@ -4,6 +4,7 @@ const http = require('http');
 const jwt = require('jsonwebtoken');
 // const axios = require('axios');
 const amqp = require('amqplib');
+const path = require('path');
 const nodemailer = require('nodemailer');
 const rbq = require('./utils/rbqWorker');
 const mailer = require('./utils/mail');
