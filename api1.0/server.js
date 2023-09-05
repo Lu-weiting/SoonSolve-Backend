@@ -43,9 +43,11 @@ const app = express();
 
 require('dotenv').config();
 // 
+const ssl = require('./utils/SSL');
 app.use(cors());
 app.use('/static', express.static('/soonsolve/static'));
 app.use(express.json());
+app.use(ssl);
 const usersRouter = require('./Routers/usersRouter');
 const tasksRouter = require('./Routers/tasksRouter');
 const tasksReqRouter = require('./Routers/tasksReqRouter');
