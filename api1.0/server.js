@@ -43,11 +43,11 @@ const app = express();
 
 require('dotenv').config();
 // 
-const ssl = require('./utils/SSL');
+// const ssl = require('./utils/SSL');
 app.use(cors());
 app.use('/static', express.static('/soonsolve/static'));
 app.use(express.json());
-app.use(ssl);
+// app.use(ssl);
 const usersRouter = require('./Routers/usersRouter');
 const tasksRouter = require('./Routers/tasksRouter');
 const tasksReqRouter = require('./Routers/tasksReqRouter');
@@ -63,6 +63,14 @@ app.use('/api/1.0/friends', friendsRouter);
 app.use('/api/1.0/events', eventsRouter);
 app.use('/api/1.0/chat', chatRouter);
 app.use('/api/1.0/map', mapRouter);
+
+app.get('/.well-known/pki-validation/645AC20059CE0F16BEF838BF3350EEEE.txt', (req, res) => {
+    console.log("well-know!");
+    const file= path.join(__dirname,'..','static','.well-known','pki-validation','645AC20059CE0F16BEF838BF3350EEEE.txt');
+    console.log(file);
+    res.sendFile(file);
+});
+
 app.get('/api/1.0/', (req, res) => {
     res.status(200).send('connected')
 });
