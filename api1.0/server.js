@@ -86,7 +86,6 @@ const io = require("socket.io")(server, {
         origin: "*",
     },
 });
-//
 io.use((socket, next) => {
     const token = socket.handshake.headers.authorization
     console.log("socket test token:", token)
