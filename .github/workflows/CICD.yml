@@ -16,7 +16,7 @@ jobs:
   #       echo "${{ secrets.ENV }}" > .env
   #       mkdir private
   #       echo "${{ secrets.PRIVATE_KEY }}" > private/private.key
-  #       echo "${{ secrets.CERTIFICATE }}" > private/certificate.crt
+  #       echo "${{ secrets.CERTIFICATE }}" > private/merged.crt
   #       docker-compose up -d
   #   - name: Wait for containers to start
   #     run: sleep 20
@@ -42,7 +42,7 @@ jobs:
           
           echo "${{ secrets.ENV }}" > .env
           echo "${{ secrets.PRIVATE_KEY }}" > private/private.key
-          echo "${{ secrets.CERTIFICATE }}" > private/certificate.crt
+          echo "${{ secrets.CERTIFICATE }}" > private/merged.crt
           docker system prune
           docker-compose down
           docker-compose up --build -d

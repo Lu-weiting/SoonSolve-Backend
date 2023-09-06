@@ -43,7 +43,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf 
-      - ./private/certificate.crt:/etc/ssl/certificate.crt  # 替換為您的 SSL 證書路徑
+      - ./private/merged.crt:/etc/ssl/merged.crt  # 替換為您的 SSL 證書路徑
       - ./private/private.key:/etc/ssl/private.key  # 替換為 SSL 私鑰的路徑
     networks:
       - ss_network
