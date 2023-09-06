@@ -42,7 +42,7 @@ const {
 const app = express();
 
 require('dotenv').config();
-// 
+
 // const ssl = require('./utils/SSL');
 app.use(cors());
 app.use('/static', express.static('/soonsolve/static'));
