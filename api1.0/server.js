@@ -161,7 +161,7 @@ io.on("connection", (socket) => {
             //msg contains receiver data
             const [receiver] = await connection.execute(sql4,[msg.id]);
             const mailOptions = {
-                from: 'howard369369@gmail.com', 
+                from: '110306003@g.nccu.edu.tw', 
                 to: receiver[0].email,
                 subject: 'Soon Solve Message',
                 text: `You got a new message from ${pictureResult[0].name}`
