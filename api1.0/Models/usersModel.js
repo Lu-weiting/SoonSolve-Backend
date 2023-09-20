@@ -4,14 +4,14 @@ const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
 const auth = require('../utils/auth')
 const tool = require('../utils/tool');
 const errorMsg = require('../utils/error');
-
+const mailer = require('./utils/mail');
 //Set Timezone
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
 
 module.exports = {
   signUp: async (name, email, password, res) => {
-    try{
+    try {
       const connection = await connectionPromise;
       // 檢查是否已經有相同的 email 註冊過
       const userQuery = 'SELECT email FROM users WHERE email = ?';
@@ -45,19 +45,19 @@ module.exports = {
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
   },
   signIn: async (email, res) => {
-    try{
+    try {
       const connection = await connectionPromise;
       // 查詢使用者是否存在
       const signinQuery = 'SELECT * FROM users WHERE email = ?';
       const [is_exist] = await connection.execute(signinQuery, [email]);
       if (is_exist.length === 0) {
-       return errorMsg.noUser(res);
+        return errorMsg.noUser(res);
       }
       const user = is_exist[0];
       return user;
@@ -65,7 +65,7 @@ module.exports = {
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
@@ -77,24 +77,24 @@ module.exports = {
     try {
       if (cursor == null) {
         decodeCuser = Math.pow(2, 64);
-      } 
+      }
       else {
         decodeCuser = await tool.decryptCursor(cursor);
       }
 
       if (type == 'Released') {
-        query = 
-        `
+        query =
+          `
         SELECT t.*, u.name, u.nickname, u.picture 
         FROM tasks t
         LEFT JOIN users u ON t.poster_id = u.id
         WHERE t.poster_id = ? AND t.id < ?
         ORDER BY t.id DESC LIMIT ${limit}
         `;
-      } 
+      }
       else if (type == 'Accepted') {
-        query = 
-        `
+        query =
+          `
         SELECT ut.status,
           t.id,
           t.title,
@@ -120,7 +120,7 @@ module.exports = {
       const [results] = await connection.execute(query, [my_id, decodeCuser]);
       if (results.length < limit) {
         nextCursor = null;
-      } 
+      }
       else {
         const lastPostId = results[results.length - 1].id;
         nextCursor = await tool.encryptCursor(lastPostId);
@@ -156,11 +156,11 @@ module.exports = {
         }
       };
       return response;
-    } 
+    }
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
@@ -168,8 +168,8 @@ module.exports = {
   getProfile: async (res, targetId, my_id) => {
     const connection = await connectionPromise;
     try {
-      const getProfileQuery = 
-      `
+      const getProfileQuery =
+        `
       SELECT
         u.id AS user_id,
         u.name AS user_name,
@@ -224,11 +224,11 @@ module.exports = {
         }
       };
       return data;
-    } 
+    }
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
@@ -249,11 +249,11 @@ module.exports = {
       }
       return data;
 
-    } 
+    }
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
@@ -269,19 +269,32 @@ module.exports = {
         }
       }
       return data;
-    } 
+    }
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
   },
-  createComment: async(res,content,task_poster_id,userId)=>{
+  createComment: async (res, content, task_poster_id, userId) => {
     const connection = await connectionPromise;
     try {
-      const [insertResult] = await connection.execute('INSERT INTO comments (content,user_id,poster_id) VALUES (?,?,?)', [content,task_poster_id, userId]);
+      const [insertResult] = await connection.execute('INSERT INTO comments (content,user_id,poster_id) VALUES (?,?,?)', [content, task_poster_id, userId]);
+      const q = `SELECT  A.name AS a_name, A.email AS a_email,B.name AS commenter_name, B.email AS commenter_email
+                 FROM users AS A
+                 INNER JOIN users AS B ON A.id = ${task_poster_id} AND B.id = ${userId};
+                `;
+      const [userResult] = await connection.execute(q);
+      const mailOptions = {
+        from: 'runeeld23@gmail.com',
+        to: userResult[0].a_email,
+        subject: 'Soon Solve Message',
+        text: `You got a new comment from ${userResult[0].commenter_name}`
+      };
+      await mailer.enqueueMail(mailOptions).catch(console.error);
+      console.log('enqueue success!');
 
       const data = {
         data: {
@@ -297,11 +310,11 @@ module.exports = {
       const eventQuery = 'INSERT INTO events(sender_id, receiver_id, type, is_read) VALUES(?,?,?,?)';
       await connection.execute(eventQuery, [userId, task_poster_id, type, false]);
       return data;
-    } 
+    }
     catch (error) {
       errorMsg.query(res);
       console.error(error);
-    } 
+    }
     finally {
       console.log('connection release');
     }
