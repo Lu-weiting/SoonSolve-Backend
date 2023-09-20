@@ -4,7 +4,7 @@ const crypto = require('crypto'); // 引入 crypto 套件，用於加密處理
 const auth = require('../utils/auth')
 const tool = require('../utils/tool');
 const errorMsg = require('../utils/error');
-const mailer = require('./utils/mail');
+const mailer = require('../utils/mail');
 //Set Timezone
 const moment = require('moment-timezone');
 moment.tz.setDefault("Asia/Taipei");
